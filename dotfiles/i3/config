@@ -207,7 +207,8 @@ bindsym XF86AudioPrev exec playerctl previous
 
 ## App shortcuts
 bindsym $mod+b exec /usr/bin/microsoft-edge-stable
-bindsym ctrl+Mod1+f exec /usr/bin/firefox
+# firefox is deliberately not installed; Edge is the browser. Re-add a
+# binding here if that changes.
 bindsym $mod+n exec /usr/bin/thunar
 bindsym Print exec maim ~/Pictures/$(date +"%Y-%m-%d-%T")-screenshot.png  && notify-send "Screenshot saved to ~/Pictures/$(date +"%Y-%m-%d-%T")-screenshot.png"
 # TODO (save selection area)
@@ -368,7 +369,6 @@ exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 
 # Autostart apps as you like
 exec --no-startup-id sleep 2 && kitty && workspace $ws1
-exec --no-startup-id sleep 3 && kitty && workspace $ws1
 #exec --no-startup-id sleep 7 && firefox https://github.com/endeavouros-team/endeavouros-i3wm-setup/blob/main/force-knowledge.md
 #exec --no-startup-id sleep 5 && thunar
 

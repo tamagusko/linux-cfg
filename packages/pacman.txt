@@ -1,0 +1,59 @@
+# Official repository packages. One per line. Comments and blanks ignored.
+# Installed as a single batch by stages/30-packages.sh with --needed.
+
+# --- shell & terminal
+zsh
+kitty
+fzf
+zoxide
+eza
+bat
+ripgrep
+fd
+git
+wget
+curl
+
+# --- system monitoring & utilities
+btop
+pciutils
+man-db
+man-pages
+unzip
+zip
+jq
+tree
+
+# --- screenshots & clipboard (X11 / i3)
+maim
+xclip
+xdotool
+
+# --- documents & reading
+zathura
+zathura-pdf-mupdf
+hunspell
+hunspell-en_us
+
+# --- editors
+vim
+micro
+
+# --- python: interpreter only. Project environments come from uv (stage 40).
+# Deliberately no python-pip / python-setuptools: Arch marks the system
+# environment externally-managed (PEP 668), so system-wide pip cannot install
+# anything anyway.
+python
+
+# --- containers
+docker
+docker-compose
+docker-buildx
+
+# --- security & maintenance
+ufw
+reflector
+pacman-contrib
+
+# --- misc
+translate-shell
