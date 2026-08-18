@@ -1,0 +1,45 @@
+# AUR packages. One per line. Comments and blanks ignored.
+#
+# Installed ONE AT A TIME by stages/30-packages.sh, continuing past failures.
+# A batched `paru -S a b c` aborts entirely if any single name is
+# unresolvable, which is how one retired package (skypeforlinux-stable-bin)
+# previously stopped every other AUR package from installing.
+#
+# Run scripts/verify-packages.sh before a fresh install to check these names
+# against the live AUR.
+
+# --- editors & writing
+visual-studio-code-bin
+typora                          # commercial, $14.99 one-time / 3 devices.
+                                # NOT typora-free* (pinned to the old beta).
+                                # Activation is manual and intentionally not
+                                # scripted; no licence key belongs in this repo.
+texstudio
+
+# --- research
+zotero
+
+# --- browser
+microsoft-edge-stable-bin
+
+# --- communication
+teams
+zoom
+
+# --- fonts
+ttf-meslo-nerd-font-powerlevel10k
+
+# --- clipboard manager (i3)
+greenclip
+
+# Removed and why:
+#   skypeforlinux-stable-bin  Microsoft retired consumer Skype 2025-05-05
+#   slack-desktop             no longer used
+#   python39                  Python 3.9 EOL 2025-10-31; uv manages versions
+#   timeshift-bin             superseded by btrfs + snapper (stage 90)
+
+# --- optional: Brazilian Portuguese spellcheck.
+# Not in the official repos (checked 2026-08-18), so it lives here where a
+# failed lookup is non-fatal. Verify the current name with
+# scripts/verify-packages.sh before relying on it.
+hunspell-pt-br
