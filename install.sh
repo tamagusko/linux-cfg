@@ -16,6 +16,18 @@ IFS=$'\n\t'
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export REPO_DIR
 
+# Fail with an actionable message rather than a bare "No such file". A clone
+# that is missing lib/ is not a broken install, it is an incomplete checkout —
+# and the bare shell error for that reads like a bug in the script.
+if [[ ! -r "$REPO_DIR/lib/common.sh" ]]; then
+    printf 'ERROR: %s/lib/common.sh is missing.\n\n' "$REPO_DIR" >&2
+    printf 'Every stage sources this file, so nothing can run without it.\n' >&2
+    printf 'The checkout is incomplete. Re-clone with:\n\n' >&2
+    printf '  git clone https://github.com/tamagusko/linux-cfg.git\n\n' >&2
+    printf 'and confirm lib/common.sh is present before re-running.\n' >&2
+    exit 1
+fi
+
 # shellcheck source=lib/common.sh
 source "$REPO_DIR/lib/common.sh"
 
