@@ -95,11 +95,46 @@ sudo journalctl --vacuum-size=500M
 
 ```bash
 nvidia-smi                        # GPU visible, driver version
-sudo ufw status verbose           # firewall rules ACTUALLY applied
+sudo firewall-cmd --list-all      # firewall rules ACTUALLY applied (firewalld)
+sudo ufw status verbose           # ...or this, if you are on ufw instead
 systemctl --failed                # anything broken
 zramctl                           # zram active
 sudo snapper list | tail          # snapshots being taken
 findmnt -no FSTYPE /              # btrfs?
+```
+
+## Docker and the firewall
+
+Docker publishes ports **around** the firewall. It writes its own nftables
+chains (`DOCKER`, `DOCKER-USER`, `DOCKER-ISOLATION`) and its NAT rules are
+evaluated in FORWARD before the firewall's INPUT rules are consulted. This is a
+Docker design decision, not a bug, and it applies to firewalld and ufw alike —
+switching firewalls does not fix it.
+
+```bash
+docker run -p 8080:80 image             # reachable by anyone on the LAN
+docker run -p 127.0.0.1:8080:80 image   # reachable only by you
+```
+
+**Loopback binding is the fix for 95% of cases.** On a workstation, containers
+almost always serve only you, so make `127.0.0.1:` the habit.
+
+If you genuinely need a container reachable from the network but still filtered,
+use the `DOCKER-USER` chain, which is evaluated before Docker's own rules:
+
+```bash
+# Default-drop forwarded traffic, allowing only an explicit source range.
+sudo nft insert rule inet filter DOCKER-USER ip saddr != 192.168.1.0/24 drop
+```
+
+Make it persistent with your firewall's own config, not an ad-hoc script — an
+un-persisted rule vanishes on reboot and takes your assumptions with it.
+
+To check what is actually exposed right now:
+
+```bash
+sudo ss -tulpn | grep -v '127.0.0.1\|::1'   # anything not bound to loopback
+docker ps --format '{{.Names}}\t{{.Ports}}'
 ```
 
 ## Backups

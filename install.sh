@@ -93,7 +93,7 @@ print_summary
 
 banner "NEXT STEPS"
 log "1. Reboot — the NVIDIA driver and the cedilla input modules need it."
-log "2. After reboot, verify:  nvidia-smi  &&  sudo ufw status verbose"
+log "2. After reboot, verify:  nvidia-smi  &&  sudo firewall-cmd --list-all"
 log "3. Activate Typora by hand (licence key is deliberately not scripted)."
 log "4. Set your git identity:  git config --global user.name / user.email"
 log "5. Read docs/MAINTENANCE.md for the update routine."

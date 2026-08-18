@@ -49,7 +49,7 @@ Each stage is independently runnable and safe to run twice.
 | `50-input` | Cedilla on a US-International layout |
 | `60-latex` | TeX Live, `pandoc-cli`, `pandoc-crossref`, Quarto |
 | `70-dotfiles` | oh-my-zsh, powerlevel10k, managed `.zshrc`, stow into `~/.config` |
-| `80-security` | ufw, ssh client hardening, fstrim, mirrors |
+| `80-security` | Firewall (firewalld or ufw, whichever is present), ssh client hardening, fstrim, mirrors |
 | `90-maintenance` | btrfs snapshots, zram, pacman cache cleanup |
 
 Order matters: the GPU driver installs before anything that needs it, paru
@@ -112,11 +112,21 @@ repository. Activate it by hand on first launch.
 
 Made explicitly rather than by accident:
 
-- **Firewall**: deny inbound, allow outbound. No ports opened. The previous
-  version opened 80 and 443 on a machine running no server — and, because the
-  rule commands ran without `sudo` while the service was enabled *with* it,
-  produced an active ufw unit with no ruleset. Verify with
-  `sudo ufw status verbose`.
+- **Firewall**: **firewalld**, which EndeavourOS has installed and enabled by
+  default since the Apollo release (2022). Stage 80 detects what is present
+  rather than assuming: firewalld if it is there, ufw as a fallback on vanilla
+  Arch, and a hard stop if both are running — two firewalls driving the same
+  nftables ruleset overwrite each other and neither tool then reports the truth.
+  Policy is deny inbound, allow outbound, no ports opened; the `ssh` service is
+  closed in the public zone unless an sshd is actually enabled. The previous
+  version opened inbound 80 and 443 on a machine running no server, and ran its
+  rule commands without `sudo` so they all failed while the service was enabled
+  *with* sudo — an active unit with no ruleset. Every path now prints the live
+  ruleset. Verify with `sudo firewall-cmd --list-all`.
+- **Docker publishes ports around the firewall.** Docker manages its own
+  nftables chains, evaluated before the firewall's, so `-p 8080:80` is reachable
+  from the LAN whatever the firewall says — with firewalld or ufw alike. Bind to
+  loopback (`-p 127.0.0.1:8080:80`) unless you mean to serve the network.
 - **AUR**: `paru` builds arbitrary user-submitted scripts. `--noconfirm` means
   no PKGBUILD is shown. The paru bootstrap itself pauses to display its PKGBUILD
   before building. For everything else, review with `paru -G <pkg>` when a
