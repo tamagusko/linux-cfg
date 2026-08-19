@@ -32,19 +32,66 @@ SRC="$HOME/.claude"
 DST="$REPO_DIR/dotfiles/claude"
 
 DRY=()
-[[ "${1:-}" == "--dry-run" ]] && DRY=(--dry-run)
-
-[[ -d "$SRC" ]] || { echo "no $SRC on this machine" >&2; exit 1; }
-
-# Refuse to run backwards. If ~/.claude/skills is already a link into the repo,
-# rsyncing it back over itself is at best pointless and at worst destructive.
-if [[ -L "$SRC/skills" && "$(readlink -f "$SRC/skills")" == "$DST/skills" ]]; then
-    echo "$SRC is already linked to this repo — edit the files directly." >&2
-    echo "This script is only for exporting from an unlinked machine." >&2
-    exit 1
-fi
+FORCE=0
+for arg in "$@"; do
+    case "$arg" in
+        --dry-run) DRY=(--dry-run) ;;
+        --force)   FORCE=1 ;;
+        *) echo "unknown option: $arg" >&2; exit 2 ;;
+    esac
+done
 
 DIRS=(skills agents commands hooks rules scripts)
+
+# ---------------------------------------------------------------- preflight
+#
+# Everything below is checked BEFORE the first rsync, because rsync --delete
+# mutates the repo immediately and there is no useful half-done state.
+#
+# This exists because the first version had only the symlink guard, and running
+# it on a freshly installed workstation replaced the repo's 123 skills with the
+# empty ~/.claude of a machine that had never been configured. The rsync
+# succeeded; only the later `cp` of CLAUDE.md failed, so the error message
+# pointed at the wrong thing entirely.
+die() { echo "export refused: $*" >&2; exit 1; }
+
+[[ -d "$SRC" ]] || die "no $SRC on this machine"
+
+# Backwards run. If a directory here is already a link into the repo, this
+# machine is a consumer of the config, not its source.
+for d in "${DIRS[@]}"; do
+    if [[ -L "$SRC/$d" && "$(readlink -f "$SRC/$d")" == "$DST/$d" ]]; then
+        echo "$SRC/$d is a symlink into this repo — edit the files directly." >&2
+        die "this machine is set up by stage 75; nothing to export from it"
+    fi
+done
+
+# Fresh machine. A configured ~/.claude always has CLAUDE.md; one installed by
+# stage 75 has it as a symlink, which the loop above already caught.
+[[ -f "$SRC/CLAUDE.md" ]] || die "$SRC/CLAUDE.md is missing — this looks like an
+unconfigured machine. To INSTALL the config here, run instead:
+
+    ./install.sh --only 75-claude"
+
+# Wholesale loss. Exporting a source with a fraction of the repo's content means
+# the source is not authoritative — a partial install, a wrong HOME, a machine
+# mid-setup. Shrinking is legitimate when you delete skills on purpose, so this
+# is overridable rather than fatal.
+for d in "${DIRS[@]}"; do
+    ((FORCE == 0)) || break
+    [[ -d "$DST/$d" ]] || continue
+    # -L follows symlinks, matching what `rsync -L` will actually write. Without
+    # it the 71 linked skills count as 1 file each here but expand to hundreds
+    # in the repo, and this check fires on a perfectly good export.
+    have_n=$(find -L "$SRC/$d" -type f 2>/dev/null | wc -l | tr -d ' ')
+    repo_n=$(find "$DST/$d" -type f 2>/dev/null | wc -l | tr -d ' ')
+    ((repo_n > 10)) || continue
+    if ((have_n * 2 < repo_n)); then
+        echo "  $d: source has $have_n files, repo has $repo_n" >&2
+        die "the source is far smaller than the repo, which --delete would erase.
+Re-run with --force if you really mean to shrink it."
+    fi
+done
 
 for d in "${DIRS[@]}"; do
     [[ -d "$SRC/$d" ]] || { echo "skip $d (absent)"; continue; }
