@@ -49,9 +49,3 @@ settings.local.json
 # Per-machine session logs written by the session-summary hook. They record
 # which files changed on which machine and are of no use in a shared history.
 .claude/logs/
-
-# systemd writes its enablement symlinks next to the units, and ~/.config/systemd
-# is a link into this repo, so they land here. They are absolute paths into one
-# machine's home directory — state, not config. `systemctl --user enable` in
-# stage 80 recreates them per machine.
-dotfiles/systemd/user/*.wants/

@@ -79,17 +79,20 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# ssh-agent, started by the systemd user unit in dotfiles/systemd/user. Point
-# every shell at its fixed socket so an encrypted key is unlocked once per
-# login; ~/.ssh/config has AddKeysToAgent yes, so the first push of the session
-# loads the key and the rest are silent.
-export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$UID}/ssh-agent.socket"
+# ssh-agent: gcr-ssh-agent, from gcr-4, enabled as a user socket by stage 80.
+#
+# Chosen over a plain ssh-agent because it is backed by the login keyring. A
+# plain agent holds the decrypted key in RAM only, so every reboot costs a
+# passphrase prompt; gcr stores the passphrase in the keyring, which
+# pam_gnome_keyring unlocks with the password already typed at the lightdm
+# prompt. The key stays encrypted on disk either way — a stolen drive is still
+# useless without the login password — but there is nothing left to type.
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$UID}/gcr/ssh"
 
-# Passphrase prompt for the cases with no terminal to prompt on: a push started
-# from a GUI, or from a tool that holds no tty. Without this ssh cannot ask and
-# fails with "Permission denied (publickey)", which reads like an authorisation
-# problem rather than a missing prompt.
-export SSH_ASKPASS=/usr/lib/ssh/x11-ssh-askpass
+# gcr's own askpass, not x11-ssh-askpass: its dialog carries the "remember"
+# option that writes the passphrase into the keyring. The plain X11 dialog
+# unlocks the key for one session and forgets it.
+export SSH_ASKPASS=/usr/lib/gcr4-ssh-askpass
 export SSH_ASKPASS_REQUIRE=prefer
 
 # Personal overrides, never managed by linux-cfg.

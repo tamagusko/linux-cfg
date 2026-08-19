@@ -65,9 +65,14 @@ docker-compose
 docker-buildx
 
 # --- ssh
-# Passphrase prompt for ssh when no terminal is attached. Tiny and toolkit-free;
-# ksshaskpass and seahorse pull in Plasma and GNOME respectively.
-x11-ssh-askpass
+# gcr-4 provides gcr-ssh-agent: an ssh-agent backed by the login keyring, so a
+# passphrase-protected key is unlocked by the password already typed at the
+# display manager instead of once per boot. gnome-keyring provides the keyring
+# itself and pam_gnome_keyring, which /etc/pam.d/lightdm already references
+# behind a leading `-` (skip silently if absent) — installing it is therefore
+# the whole configuration, with no PAM edit and no risk to graphical login.
+gcr-4
+gnome-keyring
 
 # --- security & maintenance
 firewalld

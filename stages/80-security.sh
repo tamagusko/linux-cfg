@@ -157,26 +157,31 @@ fi
 info "enabling weekly SSD trim"
 # ------------------------------------------------------------- ssh-agent
 #
-# A user unit, so no sudo: it runs as the login user and its socket lives in
-# that user's runtime directory. Enabling it here rather than in stage 70 keeps
-# every ssh client decision — client hardening above, agent below — in one
-# place.
+# gcr-ssh-agent, a user socket, so no sudo: it runs as the user whose keys it
+# holds. The point is to make an encrypted key practical. An unencrypted key on
+# a machine with no disk encryption is a bearer token — whoever reads the file
+# can authenticate as this user — but a passphrase prompt on every push is how
+# people end up removing the passphrase again. Backed by the login keyring, the
+# passphrase is supplied by the password already typed at the display manager.
 #
-# The point is to make an encrypted key practical. An unencrypted key on a
-# machine with no disk encryption is a bearer token: whoever reads the file can
-# authenticate as this user. A passphrase fixes that but costs a prompt per
-# push, which is how people end up removing it again. The agent asks once per
-# login instead.
-if [[ -f "$HOME/.config/systemd/user/ssh-agent.service" ]]; then
-    if systemctl --user is-enabled --quiet ssh-agent.service 2>/dev/null; then
-        ok "ssh-agent user service already enabled"
+# No PAM edit: EndeavourOS ships /etc/pam.d/lightdm with pam_gnome_keyring
+# already listed behind a leading `-`, which skips the module silently when it
+# is absent. Installing gnome-keyring (stage 30) is what activates it.
+if have gcr-ssh-agent || [[ -S "${XDG_RUNTIME_DIR:-/run/user/$UID}/gcr/ssh" ]] \
+   || [[ -f /usr/lib/systemd/user/gcr-ssh-agent.socket ]]; then
+    if systemctl --user is-enabled --quiet gcr-ssh-agent.socket 2>/dev/null; then
+        ok "gcr-ssh-agent socket already enabled"
     else
-        info "enabling the ssh-agent user service"
+        info "enabling the gcr-ssh-agent user socket"
         run systemctl --user daemon-reload
-        run systemctl --user enable --now ssh-agent.service
+        run systemctl --user enable --now gcr-ssh-agent.socket
+    fi
+
+    if ! pacman -Qq gnome-keyring >/dev/null 2>&1; then
+        warn "gnome-keyring is not installed — keys will still need a passphrase every boot"
     fi
 else
-    warn "ssh-agent.service not linked yet — run stage 70 first"
+    warn "gcr-ssh-agent not found (gcr-4 missing?) — skipping agent setup"
 fi
 
 run sudo systemctl enable --now fstrim.timer
