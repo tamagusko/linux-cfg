@@ -52,6 +52,7 @@ fi
 
 printf '\n=== 3. referenced scripts exist and are executable ===\n'
 missing_scripts=0
+# shellcheck disable=SC2088  # the tilde below is a regex literal, not a path
 while read -r path; do
     [[ -n "$path" ]] || continue
     resolved="${path/#\~\/.config\/i3/$REPO_DIR/dotfiles/i3}"
@@ -62,7 +63,6 @@ while read -r path; do
         printf '  NOT EXECUTABLE: %s\n' "$path"
         missing_scripts=1; fail=1
     fi
-# shellcheck disable=SC2088  # the tilde is a literal in a regex, not a path
 done < <(grep -oE '~/\.config/i3/scripts/[A-Za-z0-9_.-]+' "$CONFIG" | sort -u)
 ((missing_scripts == 0)) && printf '  all present\n'
 
