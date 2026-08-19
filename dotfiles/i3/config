@@ -259,9 +259,17 @@ set $ws10 "10:"
 #
 # Names verified on this machine 2026-08-19. If the hardware changes, re-run
 # ./scripts/monitors.sh and update these three lines.
-set $mon_main   DP-5      # big central monitor
-set $mon_vert   DP-2      # rotated portrait, right, auxiliary
-set $mon_small  HDMI-0    # smaller monitor below the main one
+# NOTE: no trailing comments on these lines. i3's `set` takes the entire rest
+# of the line as the value, comment included, so `set $mon_main DP-5  # main`
+# defines $mon_main as "DP-5  # main" and every workspace line built from it
+# becomes a parse error.
+#
+#   mon_main   big central monitor
+#   mon_vert   rotated portrait, right, auxiliary
+#   mon_small  smaller monitor below the main one
+set $mon_main DP-5
+set $mon_vert DP-2
+set $mon_small HDMI-0
 
 # Workspace -> output.
 #
