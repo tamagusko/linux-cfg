@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+#
+# Physical monitor arrangement — where each screen sits in the X coordinate
+# space, which is what decides where the pointer crosses between them.
+#
+#          ┌──────────────┐ ┌────┐
+#          │              │ │    │
+#          │    DP-5      │ │DP-2│   rotated, right of the main screen
+#          │    main      │ │    │
+#          └──────────────┘ └────┘
+#          ┌────────┐
+#          │ HDMI-0 │   below the main screen
+#          └────────┘
+#
+# Pointer behaviour this produces:
+#   main -> right  crosses to the rotated screen
+#   main -> down   crosses to the small screen
+#
+# This is separate from the workspace assignment in ~/.config/i3/config. That
+# decides which workspace *appears* on which output; this decides where the
+# outputs *are*. Both are needed.
+#
+# Run by i3 via exec_always, so it re-applies on every reload
+# ($mod+Shift+c) and after a cable change.
+
+set -euo pipefail
+IFS=$'\n\t'
+
+MAIN=DP-5      # big central monitor
+VERT=DP-2      # rotated portrait monitor, to the right
+SMALL=HDMI-0   # smaller monitor, below the main one
+
+# Rotation of the portrait screen. "left" turns it counter-clockwise; use
+# "right" instead if the image comes out upside down.
+VERT_ROTATE=left
+
+# --right-of / --below position relatively, so no resolution is hardcoded here
+# and the layout survives a monitor being swapped for a different size.
+
+connected() {
+    xrandr --query | awk -v o="$1" '$1 == o && $2 == "connected" { found = 1 } END { exit !found }'
+}
+
+command -v xrandr >/dev/null 2>&1 || exit 0
+
+if ! connected "$MAIN"; then
+    echo "monitor-layout: $MAIN not connected, leaving the layout alone" >&2
+    exit 0
+fi
+
+args=(--output "$MAIN" --auto --primary --rotate normal)
+
+if connected "$VERT"; then
+    args+=(--output "$VERT" --auto --rotate "$VERT_ROTATE" --right-of "$MAIN")
+else
+    args+=(--output "$VERT" --off)
+fi
+
+if connected "$SMALL"; then
+    args+=(--output "$SMALL" --auto --rotate normal --below "$MAIN")
+else
+    args+=(--output "$SMALL" --off)
+fi
+
+xrandr "${args[@]}"
