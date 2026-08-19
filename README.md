@@ -1,148 +1,96 @@
 # linux-cfg
 
 Workstation setup for **EndeavourOS / Arch with i3wm**, aimed at research
-computing: PyTorch and computer-vision work on an NVIDIA GPU, plus LaTeX,
-Quarto and Zotero for writing.
+computing: PyTorch and computer vision on an NVIDIA GPU, plus LaTeX, Quarto and
+Zotero for writing.
 
-> Personal configuration. Read it before running it — it installs packages and
-> changes system settings as root.
+> Personal configuration. It installs packages and changes system settings as
+> root — read it before running it. Never pipe an installer straight from the
+> internet into a shell.
 
 ## Install
-
-Clone it, read it, then run it. **Do not pipe this into a shell from the
-internet** — the previous version documented
-`sh <(curl -s .../main/config.sh)`, which executes whatever happens to be on a
-mutable branch, with root escalation and no integrity check.
 
 ```bash
 git clone https://github.com/tamagusko/linux-cfg.git ~/repos/linux-cfg
 cd ~/repos/linux-cfg
-
-./scripts/verify-packages.sh   # confirm every package name still resolves
-./install.sh --dry-run         # print every command without running it
-./install.sh                   # run it
+./scripts/verify-packages.sh
+./install.sh --dry-run
+./install.sh
 ```
 
-Then reboot. The NVIDIA driver and the cedilla input modules both need it.
+Then reboot — the NVIDIA driver and the cedilla input modules both need it.
 
-### Options
+## Commands
 
-| Flag | Effect |
+| Command | What it does |
 |---|---|
-| `--dry-run` | Print every command, change nothing |
-| `--yes` | Accept every prompt (unattended) |
-| `--only 20-gpu` | Run one stage |
-| `--from 40-dev` | Resume from a stage onwards |
-| `--list` | List stages |
+| `./install.sh` | Run every stage |
+| `./install.sh --dry-run` | Print every command, change nothing |
+| `./install.sh --list` | List the stages |
+| `./install.sh --only 20-gpu` | Run a single stage |
+| `./install.sh --from 40-dev` | Resume from a stage onwards |
+| `./install.sh --yes` | Unattended: accept every prompt |
+| `./scripts/verify-packages.sh` | Check every package name against the live repos and AUR |
+| `./scripts/new-ml-project.sh myproject` | Scaffold a uv project with the matching CUDA wheels |
+| `./scripts/monitors.sh` | Print the `set $mon_*` lines for the current display layout |
+| `./scripts/check-i3-config.sh` | Static-check `dotfiles/i3/config` before reloading i3 |
+| `./scripts/check-repo-hygiene.sh` | Audit this repo for credentials and stray state |
+| `./scripts/export-claude-config.sh` | Re-export `~/.claude` into `dotfiles/claude/` |
+
+Runs are logged to `~/.local/state/linux-cfg/install-<timestamp>.log`.
 
 ## Stages
 
-Each stage is independently runnable and safe to run twice.
+Independently runnable, safe to run twice. Numbered in tens so a new stage slots
+in without renumbering the rest.
 
 | Stage | Does |
 |---|---|
-| `00-preflight` | Refuses to run as root or on a non-Arch system; checks network, sudo, disk, filesystem |
-| `10-system` | Keyrings, full upgrade, `base-devel`, **LTS fallback kernel**, CPU microcode, paru |
-| `20-gpu` | `nvidia-open` + optional CUDA/cuDNN |
+| `00-preflight` | Refuses non-Arch or root; checks network, sudo, disk, git hooks |
+| `10-system` | Keyrings, full upgrade, `base-devel`, LTS fallback kernel, microcode, paru |
+| `20-gpu` | `nvidia-open`, optional CUDA and cuDNN |
 | `30-packages` | `packages/pacman.txt` as a batch, `packages/aur.txt` one at a time |
 | `40-dev` | uv, docker, git defaults |
 | `50-input` | Cedilla on a US-International layout |
+| `55-bluetooth` | Enables `bluetooth.service`, clears rfkill blocks |
 | `60-latex` | TeX Live, `pandoc-cli`, `pandoc-crossref`, Quarto |
-| `70-dotfiles` | oh-my-zsh, powerlevel10k, managed `.zshrc`, symlink dotfiles into `~/.config` |
-| `75-claude` | Claude Code CLI, nodejs for its hooks, and `~/.claude` config linked from `dotfiles/claude` |
-| `80-security` | Firewall (firewalld or ufw, whichever is present), ssh client hardening, fstrim, mirrors |
+| `70-dotfiles` | oh-my-zsh, powerlevel10k, `.zshrc`, symlinks into `~/.config` |
+| `75-claude` | Claude Code CLI, nodejs for its hooks, `~/.claude` from `dotfiles/claude` |
+| `80-security` | Firewall, ssh client hardening, fstrim, mirrors |
 | `90-maintenance` | btrfs snapshots, zram, pacman cache cleanup |
 
-Order matters: the GPU driver installs before anything that needs it, paru
-before the AUR packages, dotfiles after the apps they configure, and the
-firewall last so it is not fighting the installs.
+Order matters: the GPU driver before anything that needs it, paru before the AUR
+packages, dotfiles after the apps they configure, the firewall last.
 
-## Design notes
+## Worth knowing
 
-**Everything is idempotent.** Three rules, because breaking any of them is what
-made the previous version unsafe to re-run:
+- **`uv`, never system `pip`.** Arch marks system Python externally-managed
+  (PEP 668) and bumps the interpreter often, breaking anything in site-packages.
+  uv pins its own interpreter per project and picks the CUDA wheel index that
+  matches the driver — choosing that by hand is how people train on CPU by
+  accident.
+- **Docker publishes ports around the firewall.** It writes its own nftables
+  chains, evaluated first, so `-p 8080:80` is LAN-reachable whatever the
+  firewall says. Use `-p 127.0.0.1:8080:80` unless you mean to serve the network.
+- **Typora** is the paid AUR release. Activation is deliberately not scripted and
+  no licence key belongs in this repo.
+- **No automatic updates.** On a rolling release the safety net is snapshots plus
+  an LTS kernel, not automation. See [docs/MAINTENANCE.md](docs/MAINTENANCE.md).
+- **Re-running is safe.** Every stage is idempotent: `clone_or_pull` instead of
+  `git clone`, `ensure_block` instead of `>>`, `backup_file` plus symlinks
+  instead of `cp`. Failures are loud — `set -euo pipefail` and an `ERR` trap that
+  names the stage, line and command.
+- **`dotfiles/<pkg>` is symlinked to `~/.config/<pkg>`**, so it is not a
+  boundary: whatever an app writes there is already in the working tree of a
+  public repo. A pre-commit hook scans staged content for credentials.
 
-1. Never `git clone` — `clone_or_pull` instead.
-2. Never `>>` into a config file — `ensure_block` writes a delimited block that
-   is rewritten in place, so aliases stop multiplying on every run.
-3. Never blind `cp` over user files — `backup_file` takes a timestamped copy,
-   then each config directory is symlinked (`~/.config/i3` -> `dotfiles/i3`).
-
-**Failure is loud.** Every script runs under `set -euo pipefail` with an `ERR`
-trap that prints the stage, line and failing command. A failed run cannot
-present itself as a successful one.
-
-**Why the AUR loop tolerates failure.** One deliberate exception to the above.
-A batched `paru -S a b c` aborts entirely if any single name is unresolvable —
-which is exactly what happened when `skypeforlinux-stable-bin` outlived the
-Skype product and silently prevented *every other* AUR package from installing.
-AUR packages are therefore installed one at a time, failures are collected, and
-the run ends with a summary of what did not install. Official repo names are
-validated up front instead, where an unknown name is a bug worth stopping for.
-
-**Everything is logged** to `~/.local/state/linux-cfg/install-<timestamp>.log`.
-
-## Python
-
-`uv` only. Do not use system `pip`.
-
-Arch marks the system Python environment externally-managed (PEP 668), so
-`pip install` outside a virtualenv fails by design. Arch also bumps system
-Python quickly, and every bump breaks packages installed into site-packages.
-uv sidesteps both by installing and pinning its own interpreters per project.
-
-```bash
-./scripts/new-ml-project.sh myproject             # PyTorch + Ultralytics
-./scripts/new-ml-project.sh embedded tensorflow   # TensorFlow, for TFLite work
-```
-
-`--torch-backend=auto` picks the CUDA wheel index that matches the installed
-driver. Selecting that index by hand is how people end up silently training on
-CPU.
-
-## Typora
-
-Installed from the AUR as `typora` — the commercial release, not the
-`typora-free*` packages, which are pinned to the old free beta.
-
-Licensing is $14.99 once for three devices, with a trial period.
-**Activation is deliberately not scripted**, and no licence key belongs in this
-repository. Activate it by hand on first launch.
-
-## Security choices
-
-Made explicitly rather than by accident:
-
-- **Firewall**: **firewalld**, which EndeavourOS has installed and enabled by
-  default since the Apollo release (2022). Stage 80 detects what is present
-  rather than assuming: firewalld if it is there, ufw as a fallback on vanilla
-  Arch, and a hard stop if both are running — two firewalls driving the same
-  nftables ruleset overwrite each other and neither tool then reports the truth.
-  Policy is deny inbound, allow outbound, no ports opened; the `ssh` service is
-  closed in the public zone unless an sshd is actually enabled. The previous
-  version opened inbound 80 and 443 on a machine running no server, and ran its
-  rule commands without `sudo` so they all failed while the service was enabled
-  *with* sudo — an active unit with no ruleset. Every path now prints the live
-  ruleset. Verify with `sudo firewall-cmd --list-all`.
-- **Docker publishes ports around the firewall.** Docker manages its own
-  nftables chains, evaluated before the firewall's, so `-p 8080:80` is reachable
-  from the LAN whatever the firewall says — with firewalld or ufw alike. Bind to
-  loopback (`-p 127.0.0.1:8080:80`) unless you mean to serve the network.
-- **AUR**: `paru` builds arbitrary user-submitted scripts. `--noconfirm` means
-  no PKGBUILD is shown. The paru bootstrap itself pauses to display its PKGBUILD
-  before building. For everything else, review with `paru -G <pkg>` when a
-  package is new or unfamiliar.
-- **Docker group**: root-equivalent — the socket can mount the host filesystem
-  as root. Accepted for a single-user workstation, and prompted for rather than
-  applied silently.
-- **No automatic updates**: on a rolling release, unattended upgrades break
-  systems. The safety net is snapshots plus an LTS fallback kernel, not
-  automation. See `docs/MAINTENANCE.md`.
+Why anything is done a particular way is commented next to the code that does
+it, not here.
 
 ## Maintenance
 
-See **[docs/MAINTENANCE.md](docs/MAINTENANCE.md)** for the update routine,
-recovery from a bad update, and cleanup.
+See **[docs/MAINTENANCE.md](docs/MAINTENANCE.md)** — updating, recovering from a
+bad update, cleanup, backups.
 
 ---
 
