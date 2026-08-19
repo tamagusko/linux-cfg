@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Pending repo updates for i3blocks. Prints nothing when there are none, so
+# the block occupies no width on the days it has nothing to say.
+#
+# Repo packages only. `paru -Qua` would add the AUR but hits the network for
+# every foreign package and takes seconds, which is not something to run on a
+# timer behind a status bar. The weekly routine in docs/MAINTENANCE.md covers
+# the AUR deliberately and by hand.
+#
+# checkupdates (pacman-contrib) syncs into its own temporary database, so it
+# never touches the system one. `pacman -Sy` here would set up exactly the
+# partial-upgrade breakage the installer warns about.
+#
+set -uo pipefail
+
+COLOR="${COLOR:-#8b8b8b}"
+ICON="${ICON:-}"     # fa-cloud-download
+
+list="$(checkupdates 2>/dev/null || true)"
+count="$(grep -c . <<< "$list")"
+
+case "${BLOCK_BUTTON:-}" in
+    1)
+        # Show what is waiting, without starting anything. A click that begins
+        # a system upgrade is one misclick away from a half-finished
+        # transaction at a bad moment.
+        if (( count > 0 )); then
+            notify-send -u low "$count update(s) pending" \
+                "$(head -12 <<< "$list")$( ((count > 12)) && printf '\n…and %d more' $((count - 12)) )"
+        else
+            notify-send -u low "System is up to date"
+        fi
+        ;;
+esac
+
+(( count > 0 )) || exit 0
+
+echo "$ICON $count"
+echo "$count"
+echo "$COLOR"

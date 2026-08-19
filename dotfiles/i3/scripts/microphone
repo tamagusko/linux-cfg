@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Microphone block for i3blocks: state of the default input, click to toggle.
+#
+# Follows @DEFAULT_SOURCE@ rather than a fixed device, so it tracks whatever
+# PipeWire is actually recording from — the webcam mic, the USB mic, or a
+# bluetooth headset — instead of reporting on a device no call is using.
+#
+# Muted is the coloured state, not live. A live mic during a call is normal;
+# being muted while talking is the mistake worth making visible.
+#
+set -uo pipefail
+
+COLOR_MUTED="${COLOR_MUTED:-#ffb52a}"
+ICON_LIVE="${ICON_LIVE:-}"      # fa-microphone
+ICON_MUTED="${ICON_MUTED:-}"     # fa-microphone-slash
+
+case "${BLOCK_BUTTON:-}" in
+    1) pactl set-source-mute @DEFAULT_SOURCE@ toggle >/dev/null 2>&1 ;;
+    3) setsid pavucontrol --tab=4 >/dev/null 2>&1 & ;;   # tab 4 = Input Devices
+esac
+
+state="$(pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null)"
+
+# No default source at all: every input was unplugged. Say so rather than
+# rendering a live-mic icon that is not true of anything.
+if [[ -z "$state" ]]; then
+    echo "$ICON_MUTED"
+    echo "$ICON_MUTED"
+    echo "$COLOR_MUTED"
+    exit 0
+fi
+
+if [[ "$state" == *yes* ]]; then
+    echo "$ICON_MUTED"
+    echo "$ICON_MUTED"
+    echo "$COLOR_MUTED"
+else
+    echo "$ICON_LIVE"
+    echo "$ICON_LIVE"
+fi

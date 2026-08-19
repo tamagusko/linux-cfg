@@ -21,6 +21,7 @@ IFS=$'\n\t'
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG="${1:-$REPO_DIR/dotfiles/i3/config}"
+BLOCKS="$REPO_DIR/dotfiles/i3/i3blocks.conf"
 
 [[ -r "$CONFIG" ]] || { echo "not readable: $CONFIG" >&2; exit 1; }
 
@@ -51,6 +52,9 @@ else
 fi
 
 printf '\n=== 3. referenced scripts exist and are executable ===\n'
+# i3blocks.conf is scanned too: a block whose command is missing or not
+# executable does not warn, it renders as empty space, which looks exactly
+# like a block that had nothing to report.
 missing_scripts=0
 # shellcheck disable=SC2088  # the tilde below is a regex literal, not a path
 while read -r path; do
@@ -63,7 +67,7 @@ while read -r path; do
         printf '  NOT EXECUTABLE: %s\n' "$path"
         missing_scripts=1; fail=1
     fi
-done < <(grep -oE '~/\.config/i3/scripts/[A-Za-z0-9_.-]+' "$CONFIG" | sort -u)
+done < <(grep -hoE '~/\.config/i3/scripts/[A-Za-z0-9_.-]+' "$CONFIG" "$BLOCKS" | sort -u)
 ((missing_scripts == 0)) && printf '  all present\n'
 
 printf '\n=== 4. i3 parser ===\n'

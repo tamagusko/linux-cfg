@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# GPU block for i3blocks: VRAM in use and die temperature.
+#
+# Both numbers, because they answer different questions and the CPU blocks to
+# the left answer neither. On a 12 GB card VRAM is what decides whether the
+# next job starts or dies with CUDA out of memory halfway through an epoch;
+# temperature is what quietly drops the clocks on a long run without failing.
+#
+# Click opens `watch nvidia-smi` in a terminal, the same idea as the speaker
+# icon opening pavucontrol.
+#
+set -uo pipefail
+
+WARN_TEMP="${WARN_TEMP:-80}"
+CRIT_TEMP="${CRIT_TEMP:-88}"
+WARN_VRAM="${WARN_VRAM:-90}"          # percent of total
+COLOR_WARN="${COLOR_WARN:-#ffb52a}"
+COLOR_CRIT="${COLOR_CRIT:-#ff5555}"
+
+case "${BLOCK_BUTTON:-}" in
+    1) setsid kitty -e watch -n 1 nvidia-smi >/dev/null 2>&1 & ;;
+esac
+
+# One query, not three. Separate calls can straddle a change and report a
+# temperature from one moment beside a VRAM figure from another.
+read -r used total temp < <(
+    nvidia-smi --query-gpu=memory.used,memory.total,temperature.gpu \
+               --format=csv,noheader,nounits 2>/dev/null | tr -d ','
+)
+
+# No answer is itself the news. After a kernel update the running kernel and
+# the installed NVIDIA modules do not match until a reboot, and nvidia-smi
+# fails: printing nothing would make a broken driver look like a healthy idle
+# GPU, which is the opposite of useful.
+if [[ -z "${temp:-}" ]]; then
+    echo "GPU n/a"
+    echo "GPU n/a"
+    echo "$COLOR_CRIT"
+    exit 0
+fi
+
+vram_pct=$(( used * 100 / total ))
+
+# GiB to one decimal in bash arithmetic. bc is not installed here and is not
+# worth a dependency for one division; awk would fork a second process every
+# tick for the same result.
+printf 'GPU %d.%d/%dG %d°C\n' \
+    "$(( used / 1024 ))" "$(( used * 10 / 1024 % 10 ))" "$(( total / 1024 ))" "$temp"
+printf 'GPU %d°C\n' "$temp"
+
+if (( temp >= CRIT_TEMP )); then
+    echo "$COLOR_CRIT"
+elif (( temp >= WARN_TEMP || vram_pct >= WARN_VRAM )); then
+    echo "$COLOR_WARN"
+fi
