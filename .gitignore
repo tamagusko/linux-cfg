@@ -14,3 +14,38 @@
 # helpers in lib/common.sh, which every stage sources. A `lib/` rule (inherited
 # from a Python .gitignore template) previously excluded it from every commit,
 # so a fresh clone had no lib/ directory and install.sh died at its source line.
+
+# ---------------------------------------------------------------- secrets
+#
+# This repository is public, and dotfiles/<pkg> is symlinked into ~/.config,
+# so any file an application drops into a linked directory appears here
+# immediately. These rules are the backstop for `git add -A`: they cannot stop
+# a secret pasted into a file that is already tracked (scripts/git-hooks/
+# pre-commit covers that case), but they do stop the common accident.
+#
+# Deny by filename, since the content is unknowable ahead of time.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+credentials.json
+*_secret*
+*_token*
+*.sqlite
+*.sqlite3
+*.db
+
+# Claude Code local overrides. settings.json IS tracked on purpose — it holds
+# only ${ENV_VAR} references and placeholders. The .local.json variants are
+# where real values go, so they must never be tracked.
+settings.local.json
+.claude/settings.local.json
+.mcp.local.json
+
+# Per-machine session logs written by the session-summary hook. They record
+# which files changed on which machine and are of no use in a shared history.
+.claude/logs/

@@ -43,6 +43,26 @@ else
     ok "${avail_gb}GB free on /"
 fi
 
+# Git hooks for this clone. Done in preflight rather than in a later stage
+# because it protects every commit made from the moment the repo exists on a
+# machine, and because a leak is not fixable after the fact: this repo is
+# public, so a pushed credential must be treated as burned and rotated.
+#
+# core.hooksPath points git at the versioned directory instead of copying into
+# .git/hooks, so an improvement to the scanner reaches every clone on the next
+# pull rather than only the machines where someone re-ran the installer.
+if [[ -d "$REPO_DIR/.git" ]]; then
+    current_hooks="$(git -C "$REPO_DIR" config --local core.hooksPath || true)"
+    if [[ "$current_hooks" == "scripts/git-hooks" ]]; then
+        ok "git hooks already point at scripts/git-hooks"
+    else
+        info "pointing git hooks at scripts/git-hooks (secret scanner)"
+        run git -C "$REPO_DIR" config core.hooksPath scripts/git-hooks
+    fi
+else
+    warn "not a git clone — skipping the pre-commit secret scanner"
+fi
+
 # Filesystem. Snapshots in stage 90 require btrfs; say so now, not later.
 root_fs=$(findmnt -no FSTYPE / 2>/dev/null || echo unknown)
 info "root filesystem: ${root_fs}"

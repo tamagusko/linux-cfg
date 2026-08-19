@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# Refuse to commit credentials into a public repository.
+#
+# .gitignore stops untracked secret FILES from being swept up by `git add -A`.
+# It cannot stop a secret pasted into a file that is already tracked — a token
+# dropped into dotfiles/claude/settings.json, a key in an i3 script. That is
+# what this hook is for: it reads staged CONTENT, not filenames.
+#
+# Installed by pointing git at this directory rather than by copying:
+#     git config core.hooksPath scripts/git-hooks
+# so the hook is versioned and a fix reaches every clone. Stage 00 does this.
+#
+# Deliberate bypass, when a match is a false positive:
+#     git commit --no-verify
+#
+set -uo pipefail
+
+fail=0
+note() { printf '\n\033[31mpre-commit: %s\033[0m\n' "$*" >&2; }
+
+# ------------------------------------------------------------------ content
+#
+# High-signal patterns only: each has a fixed vendor prefix and a length floor,
+# so documentation placeholders (YOUR_API_KEY, <your-api-key>, ${GEMINI_API_KEY})
+# do not match. A generic /password\s*=/ rule would fire on every vendored skill
+# doc in dotfiles/claude/skills and train everyone to pass --no-verify.
+PATTERNS='sk-ant-[A-Za-z0-9_-]{20,}
+ghp_[A-Za-z0-9]{30,}
+gho_[A-Za-z0-9]{30,}
+github_pat_[A-Za-z0-9_]{30,}
+AIza[A-Za-z0-9_-]{30,}
+xox[baprs]-[A-Za-z0-9-]{20,}
+AKIA[0-9A-Z]{16}
+-----BEGIN (RSA|DSA|EC|OPENSSH|PGP) PRIVATE KEY-----
+eyJhbGciOi[A-Za-z0-9_-]{20,}'
+
+# --cached is the staged tree, which is what is about to be committed; the
+# working tree may legitimately differ. -U0 keeps context lines out, so an
+# unchanged neighbouring line cannot trigger a false positive.
+staged_diff="$(git diff --cached -U0 --no-color --diff-filter=ACM 2>/dev/null || true)"
+added="$(printf '%s\n' "$staged_diff" | grep '^+' | grep -v '^+++' || true)"
+
+if [[ -n "$added" ]]; then
+    while IFS= read -r pattern; do
+        [[ -n "$pattern" ]] || continue
+        if hits="$(  printf "%s\n" "$added" | grep -nE -e "$pattern" | head -3)"; [[ -n "$hits" ]]; then
+            note "a staged line looks like a live credential:"
+            # Show only the matched fragment, never the whole line: printing the
+            # secret into a terminal scrollback (and any shell history) is the
+            # thing this hook exists to prevent.
+            printf '%s\n' "$hits" | grep -oE -e "$pattern" | cut -c1-12 |
+                sed 's/^/    matched: /' | sed 's/$/…/' >&2
+            fail=1
+        fi
+    done <<< "$PATTERNS"
+fi
+
+# ------------------------------------------------------------------- names
+#
+# A file whose NAME says secret, staged anyway. This only triggers via
+# `git add -f`, since .gitignore already covers these — which is exactly the
+# case worth a second look.
+if names="$(git diff --cached --name-only --diff-filter=ACM |
+            grep -iE '(^|/)(\.env(\..*)?|credentials\.json|.*\.(pem|key|p12|pfx)|id_rsa|id_ed25519|settings\.local\.json)$' || true)"
+   [[ -n "$names" ]]; then
+    note "these staged files are named like secret stores:"
+    printf '%s\n' "$names" | sed 's/^/    /' >&2
+    fail=1
+fi
+
+if (( fail )); then
+    printf '\ncommit refused. This repository is public: github.com/tamagusko/linux-cfg\n' >&2
+    printf 'Unstage the file, or `git commit --no-verify` if this is a false positive.\n\n' >&2
+    exit 1
+fi
+
+exit 0
