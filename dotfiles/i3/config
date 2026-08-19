@@ -366,9 +366,15 @@ exec --no-startup-id numlockx on
 # start conky:
 # exec_always --no-startup-id conky
 
-# start a script to setup displays
-# uncomment the next line, use arandr to setup displays and save the file as monitor:
-exec --no-startup-id ~/.screenlayout/monitor.sh
+# Physical monitor arrangement: which output sits where, and therefore where
+# the pointer crosses between screens. Separate concern from the workspace ->
+# output assignment above.
+#
+# exec_always so it re-applies on reload ($mod+Shift+c) and after a cable
+# change. Replaces the stock `~/.screenlayout/monitor.sh` arandr hook, which
+# pointed at a file that does not exist in this repo and so failed silently on
+# every start.
+exec_always --no-startup-id ~/.config/i3/scripts/monitor-layout
 
 # set wallpaper
 exec --no-startup-id sleep 2 && nitrogen --restore
