@@ -242,21 +242,56 @@ set $ws5 "5:"
 set $ws6 "6:"     
 set $ws7 "7:"     
 set $ws8 "8:"     
+set $ws9 "9:"
+set $ws10 "10:"
 
 
-# use workspaces on different displays:
-# where you have to replace VGA-0/HDMI-0 with the names for your displays
-# you can get from xrandr command
-# workspace $ws1 output HDMI-0
-# workspace $ws2 output HDMI-1
-# workspace $ws3 output HDMI-1
-# workspace $ws4 output HDMI-0
-# workspace $ws5 output HDMI-1
-# workspace $ws6 output HDMI-0
-# workspace $ws7 output HDMI-0
-# workspace $ws7 output HDMI-0
+#######################
+# monitor assignment: #
+#######################
 
-# bind program to workspace and focus to them on startup:
+# Output names for this machine. Get them with:
+#
+#     xrandr --listmonitors
+#
+# or ./scripts/monitors.sh in this repo, which also prints geometry and
+# rotation so it is obvious which is which.
+#
+# Names verified on this machine 2026-08-19. If the hardware changes, re-run
+# ./scripts/monitors.sh and update these three lines.
+set $mon_main   DP-5      # big central monitor
+set $mon_vert   DP-2      # rotated portrait, right, auxiliary
+set $mon_small  HDMI-0    # smaller monitor below the main one
+
+# Workspace -> output.
+#
+# Each line names a preferred output followed by a fallback. i3 uses the first
+# that exists, so unplugging a monitor relocates its workspaces rather than
+# losing them.
+#
+#   main   big central monitor
+#   vert   rotated portrait monitor on the right, auxiliary
+#   small  smaller monitor below the main one
+
+workspace $ws1  output $mon_small $mon_main
+workspace $ws2  output $mon_main  $mon_vert
+workspace $ws5  output $mon_main  $mon_vert
+
+workspace $ws3  output $mon_vert  $mon_main
+workspace $ws4  output $mon_vert  $mon_main
+workspace $ws6  output $mon_vert  $mon_main
+workspace $ws7  output $mon_vert  $mon_main
+workspace $ws8  output $mon_vert  $mon_main
+
+# Not requested; default to the main screen.
+workspace $ws9  output $mon_main  $mon_vert
+workspace $ws10 output $mon_main  $mon_vert
+
+# Move the focused window to the monitor left/right of the current one.
+# $mod+Shift+Left/Right are already taken by "move left/right" within a layout.
+bindsym $mod+Shift+greater move container to output right
+bindsym $mod+Shift+less    move container to output left
+
 assign [class=kitty] $ws1
 assign [class=(?i)microsoft-edge] $ws2
 assign [title="Visual Studio Code"] $ws3
