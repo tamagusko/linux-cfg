@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stage 70 — zsh, oh-my-zsh, powerlevel10k, and dotfile symlinking via stow.
+# Stage 70 — zsh, oh-my-zsh, powerlevel10k, and dotfile symlinking.
 # shellcheck source=lib/common.sh
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
 
@@ -67,33 +67,76 @@ else
     run_tty chsh -s "$zsh_path"
 fi
 
-# ------------------------------------------------------------------------ stow
+# ------------------------------------------------------------------- dotfiles
 #
-# Symlinks instead of `cp -r dotfiles/* ~/.config/`, which overwrote existing
-# config with no backup and no way back. Each directory under dotfiles/ is a
-# stow package whose contents land in ~/.config.
+# One symlink per config directory: ~/.config/i3 -> $REPO_DIR/dotfiles/i3
+#
+# This replaced GNU stow, which was wrong for this layout. `stow --target
+# ~/.config i3` links the *contents* of dotfiles/i3 into ~/.config, producing
+# ~/.config/config and ~/.config/scripts rather than ~/.config/i3/config — and
+# it exits 0 while doing so, so the run reported success while i3 started with
+# no config at all. Making stow correct would mean restructuring every package
+# as dotfiles/i3/.config/i3/..., which buys nothing here: one symlink per
+# directory is easier to read, trivially reversible, and drops a dependency.
+#
+# Edits made in ~/.config/i3/config land in the repo, where git sees them.
 mkdir -p "$HOME/.config"
 
-mapfile -t stow_packages < <(
+mapfile -t config_dirs < <(
     for d in "$REPO_DIR"/dotfiles/*/; do
         pkg="$(basename "$d")"
+        # zsh is not a ~/.config package; .zshrc is installed above.
         [[ "$pkg" == "zsh" ]] && continue
         printf '%s\n' "$pkg"
     done | sort
 )
 
-info "stowing ${#stow_packages[@]} package(s) into ~/.config: ${stow_packages[*]}"
-for pkg in "${stow_packages[@]}"; do
-    # Back up any real (non-symlink) directory stow would collide with, then
-    # clear it so the symlink can be created.
-    if [[ -e "$HOME/.config/$pkg" && ! -L "$HOME/.config/$pkg" ]]; then
-        backup_file "$HOME/.config/$pkg"
-        run rm -rf -- "$HOME/.config/$pkg"
+# Migration: undo whatever the previous stow-based version left behind. Those
+# are loose entries directly in ~/.config pointing into this repo; left alone
+# they shadow nothing and make later debugging confusing.
+if have stow; then
+    for pkg in "${config_dirs[@]}"; do
+        stow --dir="$REPO_DIR/dotfiles" --target="$HOME/.config" --delete "$pkg" >/dev/null 2>&1 || true
+    done
+fi
+for entry in "$HOME"/.config/*; do
+    [[ -L "$entry" ]] || continue
+    target="$(readlink -f "$entry" 2>/dev/null || true)"
+    # A stray is a link into dotfiles/<pkg>/ whose own name is not <pkg>.
+    if [[ "$target" == "$REPO_DIR/dotfiles/"* ]]; then
+        name="$(basename "$entry")"
+        parent="$(basename "$(dirname "$target")")"
+        if [[ "$name" != "$parent" ]]; then
+            info "removing stray link from the old stow layout: ~/.config/$name"
+            run rm -f -- "$entry"
+        fi
     fi
-    if run stow --dir="$REPO_DIR/dotfiles" --target="$HOME/.config" --restow "$pkg"; then
-        ok "stowed $pkg"
+done
+
+info "linking ${#config_dirs[@]} config director(ies): ${config_dirs[*]}"
+for pkg in "${config_dirs[@]}"; do
+    src="$REPO_DIR/dotfiles/$pkg"
+    dest="$HOME/.config/$pkg"
+
+    # Already pointing where it should.
+    if [[ -L "$dest" && "$(readlink -f "$dest")" == "$src" ]]; then
+        ok "$pkg already linked"
+        continue
+    fi
+
+    # A real directory here is the distro's own config — EndeavourOS ships an
+    # i3 config. Keep a timestamped copy before replacing it.
+    if [[ -e "$dest" && ! -L "$dest" ]]; then
+        backup_file "$dest"
+        run rm -rf -- "$dest"
+    elif [[ -L "$dest" ]]; then
+        run rm -f -- "$dest"
+    fi
+
+    if run ln -sfn "$src" "$dest"; then
+        ok "linked ~/.config/$pkg -> dotfiles/$pkg"
     else
-        warn "stow failed for $pkg — resolve the conflict by hand"
+        warn "could not link $pkg"
     fi
 done
 
