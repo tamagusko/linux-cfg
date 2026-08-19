@@ -155,6 +155,30 @@ fi
 # Weekly SSD trim. The systemd timer is the supported route; do not put discard
 # in fstab, which trims on every delete and costs throughput.
 info "enabling weekly SSD trim"
+# ------------------------------------------------------------- ssh-agent
+#
+# A user unit, so no sudo: it runs as the login user and its socket lives in
+# that user's runtime directory. Enabling it here rather than in stage 70 keeps
+# every ssh client decision — client hardening above, agent below — in one
+# place.
+#
+# The point is to make an encrypted key practical. An unencrypted key on a
+# machine with no disk encryption is a bearer token: whoever reads the file can
+# authenticate as this user. A passphrase fixes that but costs a prompt per
+# push, which is how people end up removing it again. The agent asks once per
+# login instead.
+if [[ -f "$HOME/.config/systemd/user/ssh-agent.service" ]]; then
+    if systemctl --user is-enabled --quiet ssh-agent.service 2>/dev/null; then
+        ok "ssh-agent user service already enabled"
+    else
+        info "enabling the ssh-agent user service"
+        run systemctl --user daemon-reload
+        run systemctl --user enable --now ssh-agent.service
+    fi
+else
+    warn "ssh-agent.service not linked yet — run stage 70 first"
+fi
+
 run sudo systemctl enable --now fstrim.timer
 
 # -------------------------------------------------------------------- mirrors

@@ -64,6 +64,11 @@ docker
 docker-compose
 docker-buildx
 
+# --- ssh
+# Passphrase prompt for ssh when no terminal is attached. Tiny and toolkit-free;
+# ksshaskpass and seahorse pull in Plasma and GNOME respectively.
+x11-ssh-askpass
+
 # --- security & maintenance
 firewalld
 reflector
