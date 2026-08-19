@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "test-driven-development",
+  "owner": "neolabhq",
+  "repo": "context-engineering-kit",
+  "path": "plugins/tdd/skills/test-driven-development",
+  "branch": "master",
+  "sha": "969194424ec090f5bb11df6bfa49b637a2670f6d",
+  "source": "manual"
+}

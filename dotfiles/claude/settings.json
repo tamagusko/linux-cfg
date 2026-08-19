@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1"
+  },
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const{execSync}=require('child_process'),p=require('path'),h=require('os').homedir();execSync(\\\"node \\\"+p.join(h,'.claude/hooks/security-guard.js'),{stdio:'inherit'})\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const{execSync}=require('child_process'),p=require('path'),h=require('os').homedir();execSync(\\\"node \\\"+p.join(h,'.claude/hooks/session-summary.js'),{stdio:'inherit'})\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const{execSync}=require('child_process'),p=require('path'),h=require('os').homedir();execSync(\\\"node \\\"+p.join(h,'.claude/hooks/session-start.js'),{stdio:'inherit'})\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const{execSync}=require('child_process'),p=require('path'),h=require('os').homedir();execSync(\\\"node \\\"+p.join(h,'.claude/hooks/stop-summary.js'),{stdio:'inherit'})\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const{execSync}=require('child_process'),p=require('path'),h=require('os').homedir();execSync(\\\"node \\\"+p.join(h,'.claude/hooks/skill-forced-eval.js'),{stdio:'inherit'})\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "code-simplifier@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "research-companion@andrehuang-research-companion": true,
+    "context7@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "claude-mem@thedotmack": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "obsidian@obsidian-skills": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "serena@claude-plugins-official": false,
+    "skill-creator@claude-plugins-official": true,
+    "firecrawl@claude-plugins-official": true,
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "caveman@caveman": true,
+    "everything-claude-code@everything-claude-code": true,
+    "vercel@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-code-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-code"
+      }
+    },
+    "andrehuang-research-companion": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/andrehuang/research-companion.git"
+      }
+    },
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "ui-ux-pro-max-skill": {
+      "source": {
+        "source": "github",
+        "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+      }
+    },
+    "obsidian-skills": {
+      "source": {
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
+      }
+    },
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "everything-claude-code": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/affaan-m/everything-claude-code.git"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "agentPushNotifEnabled": true,
+  "feedbackSurveyState": {
+    "lastShownTime": 1754089766006
+  },
+  "mcpServers": {
+    "streamable-mcp-server": {
+      "type": "streamable-http",
+      "url": "http://127.0.0.1:12306/mcp",
+      "description": "Chrome browser automation control service"
+    },
+    "nano-banana": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "nano-banana-mcp"
+      ],
+      "env": {
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
+      }
+    },
+    "stitch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@_davideast/stitch-mcp"
+      ]
+    },
+    "notebooklm": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "notebooklm-mcp"
+      ]
+    },
+    "zotero": {
+      "command": "zotero-mcp",
+      "args": [
+        "serve"
+      ],
+      "env": {
+        "ZOTERO_API_KEY": "<your-api-key>",
+        "ZOTERO_LIBRARY_ID": "<your-library-id>",
+        "ZOTERO_LIBRARY_TYPE": "user",
+        "UNPAYWALL_EMAIL": "<your-email@example.com>",
+        "UNSAFE_OPERATIONS": "all"
+      }
+    }
+  }
+}

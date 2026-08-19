@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "debugging",
+  "owner": "adeonir",
+  "repo": "claude-code-extras",
+  "path": "plugins/debug-tools/skills/debugging",
+  "branch": "main",
+  "sha": "61dd2c8e210f42ebbe46711eca3e12015cfac3e3",
+  "source": "manual"
+}
