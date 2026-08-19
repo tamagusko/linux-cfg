@@ -94,7 +94,9 @@
     "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
     "everything-claude-code@everything-claude-code": true,
-    "vercel@claude-plugins-official": true
+    "vercel@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "github@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
