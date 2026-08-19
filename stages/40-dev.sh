@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stage 40 — development toolchain: uv, stow, docker, git defaults.
+# Stage 40 — development toolchain: uv, docker, git defaults.
 # shellcheck source=lib/common.sh
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
 
@@ -29,12 +29,6 @@ ensure_block "$HOME/.zshrc" "uv" <<'BLOCK'
 #   uv pip install torch --torch-backend=auto
 eval "$(uv generate-shell-completion zsh 2>/dev/null || true)"
 BLOCK
-
-# --------------------------------------------------------------------- stow
-#
-# Dotfile symlinking. Replaces the old blind `cp -r dotfiles/* ~/.config/`,
-# which overwrote existing config with no backup and no way back.
-pac stow
 
 # -------------------------------------------------------------------- docker
 #

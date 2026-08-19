@@ -45,10 +45,10 @@ Each stage is independently runnable and safe to run twice.
 | `10-system` | Keyrings, full upgrade, `base-devel`, **LTS fallback kernel**, CPU microcode, paru |
 | `20-gpu` | `nvidia-open` + optional CUDA/cuDNN |
 | `30-packages` | `packages/pacman.txt` as a batch, `packages/aur.txt` one at a time |
-| `40-dev` | uv, stow, docker, git defaults |
+| `40-dev` | uv, docker, git defaults |
 | `50-input` | Cedilla on a US-International layout |
 | `60-latex` | TeX Live, `pandoc-cli`, `pandoc-crossref`, Quarto |
-| `70-dotfiles` | oh-my-zsh, powerlevel10k, managed `.zshrc`, stow into `~/.config` |
+| `70-dotfiles` | oh-my-zsh, powerlevel10k, managed `.zshrc`, symlink dotfiles into `~/.config` |
 | `80-security` | Firewall (firewalld or ufw, whichever is present), ssh client hardening, fstrim, mirrors |
 | `90-maintenance` | btrfs snapshots, zram, pacman cache cleanup |
 
@@ -65,7 +65,7 @@ made the previous version unsafe to re-run:
 2. Never `>>` into a config file — `ensure_block` writes a delimited block that
    is rewritten in place, so aliases stop multiplying on every run.
 3. Never blind `cp` over user files — `backup_file` takes a timestamped copy,
-   then stow symlinks.
+   then each config directory is symlinked (`~/.config/i3` -> `dotfiles/i3`).
 
 **Failure is loud.** Every script runs under `set -euo pipefail` with an `ERR`
 trap that prints the stage, line and failing command. A failed run cannot
