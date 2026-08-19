@@ -365,6 +365,18 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 #exec --no-startup-id dex -a -s /etc/xdg/autostart/:~/.config/autostart/
 exec --no-startup-id dex --autostart --environment i3
 
+# bluetooth tray applet — the counterpart of nm-applet next to it in the tray.
+# Left-click lists paired devices (earbuds, headphones, mouse, keyboard) and
+# connects one; right-click opens the full manager for pairing a new device.
+#
+# blueman ships /etc/xdg/autostart/blueman.desktop, so dex above would already
+# start it, but at an unpredictable moment relative to nm-applet — and i3bar
+# docks each new tray icon to the LEFT of the ones already there (verified by
+# screenshot). ~/.config/autostart/blueman.desktop (this repo, dotfiles/autostart)
+# sets Hidden=true so dex skips it and this line is the only thing that starts
+# it; the delay lets nm-applet dock first, which puts bluetooth to its left.
+exec --no-startup-id sleep 3 && blueman-applet
+
 # num lock activated
 exec --no-startup-id numlockx on
 

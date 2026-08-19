@@ -29,6 +29,14 @@ maim
 xclip
 xdotool
 
+# --- bluetooth (earbuds, headphones, mouse, keyboard)
+# bluez is the stack, bluez-utils gives bluetoothctl, blueman is the GUI +
+# tray applet. The applet is the bluetooth counterpart of nm-applet: one tray
+# icon, left-click to connect a device, right-click for the full manager.
+bluez
+bluez-utils
+blueman
+
 # --- documents & reading
 zathura
 zathura-pdf-mupdf

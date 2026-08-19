@@ -1,0 +1,11 @@
+[Desktop Entry]
+# Overrides /etc/xdg/autostart/blueman.desktop for this user.
+#
+# dex --autostart (i3 config) starts everything in /etc/xdg/autostart. blueman
+# is started explicitly from the i3 config instead, so that its tray icon docks
+# at a predictable position relative to nm-applet. Hidden=true here stops dex
+# from also launching it and racing with that line.
+Type=Application
+Name=blueman-applet
+Exec=blueman-applet
+Hidden=true
