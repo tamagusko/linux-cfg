@@ -45,6 +45,12 @@ micro
 # anything anyway.
 python
 
+# --- claude code
+# Its hooks are JavaScript. Without node they do not fail loudly, they simply
+# never run. Stage 75 re-checks this for anyone running --only 75.
+nodejs
+npm
+
 # --- containers
 docker
 docker-compose

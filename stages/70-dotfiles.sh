@@ -85,8 +85,13 @@ mkdir -p "$HOME/.config"
 mapfile -t config_dirs < <(
     for d in "$REPO_DIR"/dotfiles/*/; do
         pkg="$(basename "$d")"
-        # zsh is not a ~/.config package; .zshrc is installed above.
-        [[ "$pkg" == "zsh" ]] && continue
+        # Not every dotfiles/ directory belongs under ~/.config:
+        #   zsh    -> .zshrc, installed above
+        #   claude -> ~/.claude, installed by stage 75
+        # Linking either here would put the files somewhere nothing reads them.
+        case "$pkg" in
+            zsh|claude) continue ;;
+        esac
         printf '%s\n' "$pkg"
     done | sort
 )

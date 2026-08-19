@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "ffuf-claude-skill",
+  "owner": "microck",
+  "repo": "ordinary-claude-skills",
+  "path": "skills_all/ffuf-claude-skill",
+  "branch": "main",
+  "sha": "a8c100ff52a8f4a988029ff5d327231f7724a3db",
+  "source": "manual"
+}

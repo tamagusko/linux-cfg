@@ -49,6 +49,7 @@ Each stage is independently runnable and safe to run twice.
 | `50-input` | Cedilla on a US-International layout |
 | `60-latex` | TeX Live, `pandoc-cli`, `pandoc-crossref`, Quarto |
 | `70-dotfiles` | oh-my-zsh, powerlevel10k, managed `.zshrc`, symlink dotfiles into `~/.config` |
+| `75-claude` | Claude Code CLI, nodejs for its hooks, and `~/.claude` config linked from `dotfiles/claude` |
 | `80-security` | Firewall (firewalld or ufw, whichever is present), ssh client hardening, fstrim, mirrors |
 | `90-maintenance` | btrfs snapshots, zram, pacman cache cleanup |
 
