@@ -49,3 +49,10 @@ settings.local.json
 # Per-machine session logs written by the session-summary hook. They record
 # which files changed on which machine and are of no use in a shared history.
 .claude/logs/
+
+# Skills installed by the `skills` CLI (vercel-labs/skills). It owns
+# ~/.agents/skills and links each one into ~/.claude/skills — which is this
+# directory. The links point outside the repo and are per-machine, so they are
+# state, not config. Reinstall them with `skills install` on a new machine.
+dotfiles/claude/skills/find-skills
+dotfiles/claude/skills/systematic-debugging

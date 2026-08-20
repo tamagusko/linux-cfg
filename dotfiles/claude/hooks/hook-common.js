@@ -389,11 +389,29 @@ function detectTempFiles(cwd) {
  */
 function getAllFiles(dirPath) {
   const files = [];
-  const items = fs.readdirSync(dirPath);
+
+  let items;
+  try {
+    items = fs.readdirSync(dirPath);
+  } catch {
+    // Unreadable or vanished directory. Skipping it costs one entry in a
+    // summary; throwing takes down the whole SessionEnd hook.
+    return files;
+  }
 
   for (const item of items) {
     const fullPath = path.join(dirPath, item);
-    const stat = fs.statSync(fullPath);
+
+    // statSync follows symlinks, so a link whose target is gone throws ENOENT
+    // rather than reporting a link. That is not hypothetical here: ~/.claude
+    // is symlinked into linux-cfg, so a *relative* link written by an external
+    // skill installer resolves against the repo, not against ~, and dangles.
+    let stat;
+    try {
+      stat = fs.statSync(fullPath);
+    } catch {
+      continue;
+    }
 
     if (stat.isDirectory()) {
       files.push(...getAllFiles(fullPath));

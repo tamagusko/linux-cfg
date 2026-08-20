@@ -12,6 +12,11 @@
 #   2. A credential pasted into a file that is already tracked. The pre-commit
 #      hook catches this at commit time; this script catches what is already
 #      committed, including anything added before the hook existed.
+
+#   3. The same symlink layout in reverse: a tool that links a file into
+#      ~/.config or ~/.claude with a *relative* target resolves it against the
+#      repo instead of against ~, and the link dangles. Nothing warns about it
+#      until something walks the tree and stats it.
 #
 # Read-only: reports, never changes anything. Exit 1 if anything was found.
 set -uo pipefail
@@ -81,6 +86,23 @@ else
     echo "  NOT active — commits are unscanned. Fix with:"
     echo "     git config core.hooksPath scripts/git-hooks"
     found=1
+fi
+
+echo
+echo "=== 5. dangling symlinks inside dotfiles/ ==="
+# A link whose target no longer resolves. Anything that walks the tree and
+# stats what it finds — the session hooks do — dies on one of these.
+dangling="$(find dotfiles/ -xtype l 2>/dev/null | sort || true)"
+if [[ -n "$dangling" ]]; then
+    while IFS= read -r link; do
+        printf '  %s -> %s\n' "$link" "$(readlink "$link")"
+    done <<< "$dangling"
+    echo "  -> the target is missing, or the link is relative and resolves"
+    echo "     against the repo rather than against ~. Repoint it absolutely,"
+    echo "     or delete it."
+    found=1
+else
+    echo "  none"
 fi
 
 echo
