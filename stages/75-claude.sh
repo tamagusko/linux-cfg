@@ -134,6 +134,12 @@ else
 #
 # Sourced from ~/.zshrc. Fill in what you use and delete the rest.
 
+# github — the official GitHub plugin's MCP server, which is HTTP and sends this
+# as "Authorization: Bearer". A classic PAT needs `repo` for private
+# repositories and `read:org` for organisation data; scope it down if you only
+# read public ones. Create at https://github.com/settings/tokens
+# export GITHUB_PERSONAL_ACCESS_TOKEN=
+
 # nano-banana (Gemini image generation)
 # export GEMINI_API_KEY=
 
