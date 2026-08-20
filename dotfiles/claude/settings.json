@@ -92,11 +92,13 @@
     "skill-creator@claude-plugins-official": true,
     "firecrawl@claude-plugins-official": true,
     "andrej-karpathy-skills@karpathy-skills": true,
-    "caveman@caveman": true,
     "everything-claude-code@everything-claude-code": true,
     "vercel@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "github@claude-plugins-official": true
+    "github@claude-plugins-official": true,
+    "mattpocock-skills@claude-plugins-official": true,
+    "frontend-design@claude-code-plugins": true,
+    "playground@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
