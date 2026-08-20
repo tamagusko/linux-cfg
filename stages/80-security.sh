@@ -136,6 +136,16 @@ fi
 # ----------------------------------------------------------------- ssh client
 #
 # Client-side hardening only. Applies when connecting out to other hosts.
+#
+# IdentityAgent names the agent socket here rather than relying on
+# SSH_AUTH_SOCK. The export in .zshrc only reaches processes that source
+# .zshrc — an interactive shell — so anything started from a desktop launcher,
+# a systemd user unit, or a long-running program whose environment predates the
+# export sees no agent at all, and an encrypted key with nowhere to ask for a
+# passphrase fails as "Permission denied (publickey)". Naming the socket in the
+# config makes every ssh find the agent, because ssh reads this file on each
+# invocation. %i is the local uid, matching $XDG_RUNTIME_DIR. If the socket is
+# absent the option costs nothing: ssh falls back to the key files on disk.
 if [[ -d "$HOME/.ssh" ]] || confirm "create ~/.ssh and write a hardened client config?"; then
     mkdir -p "$HOME/.ssh"
     chmod 700 "$HOME/.ssh"
@@ -146,6 +156,7 @@ Host *
     ServerAliveInterval 60
     ServerAliveCountMax 3
     AddKeysToAgent yes
+    IdentityAgent /run/user/%i/gcr/ssh
 BLOCK
     chmod 600 "$HOME/.ssh/config" 2>/dev/null || true
 fi
