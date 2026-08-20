@@ -92,6 +92,17 @@ mapfile -t config_dirs < <(
         case "$pkg" in
             zsh|claude) continue ;;
         esac
+        # An empty directory is a leftover, not a package. `git rm` deletes the
+        # files it tracks and leaves the directories behind, so a package this
+        # repo has stopped shipping still shows up in this glob — and linking
+        # ~/.config/<pkg> at it would replace a working config with nothing.
+        # That is not hypothetical: dotfiles/systemd/user/ssh-agent.service was
+        # removed in favour of the distro's gcr-ssh-agent unit, and the empty
+        # dotfiles/systemd/user/ that survived would have taken
+        # ~/.config/systemd/user/sockets.target.wants/ down with it.
+        if [[ -z "$(find "$d" -mindepth 1 -not -type d -print -quit 2>/dev/null)" ]]; then
+            continue
+        fi
         printf '%s\n' "$pkg"
     done | sort
 )
@@ -107,15 +118,25 @@ fi
 for entry in "$HOME"/.config/*; do
     [[ -L "$entry" ]] || continue
     target="$(readlink -f "$entry" 2>/dev/null || true)"
-    # A stray is a link into dotfiles/<pkg>/ whose own name is not <pkg>.
-    if [[ "$target" == "$REPO_DIR/dotfiles/"* ]]; then
-        name="$(basename "$entry")"
-        parent="$(basename "$(dirname "$target")")"
-        if [[ "$name" != "$parent" ]]; then
-            info "removing stray link from the old stow layout: ~/.config/$name"
-            run rm -f -- "$entry"
-        fi
+    [[ "$target" == "$REPO_DIR/dotfiles/"* ]] || continue
+
+    name="$(basename "$entry")"
+    # A link this stage owns points *at* dotfiles/<pkg> and carries that same
+    # name: ~/.config/i3 -> dotfiles/i3. Anything else is stow's leftover,
+    # which pointed one level deeper — ~/.config/config -> dotfiles/i3/config.
+    #
+    # The earlier test compared the link's name against the basename of the
+    # target's *parent*, which for a correct link is the literal string
+    # "dotfiles". So every correct link failed it, and each run deleted all
+    # eight before recreating them a few lines below. Self-healing, but it
+    # logged "removing stray link" about links that were exactly right, and it
+    # left ~/.config with no i3 or kitty at all if the run died in between.
+    if [[ "$(dirname "$target")" == "$REPO_DIR/dotfiles" && "$name" == "$(basename "$target")" ]]; then
+        continue
     fi
+
+    info "removing stray link from the old stow layout: ~/.config/$name"
+    run rm -f -- "$entry"
 done
 
 info "linking ${#config_dirs[@]} config director(ies): ${config_dirs[*]}"
