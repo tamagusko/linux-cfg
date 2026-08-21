@@ -24,6 +24,27 @@ if ! have node; then
 fi
 ok "node $(node --version 2>/dev/null || echo '?')"
 
+# ----------------------------------------------------------------------- bun
+#
+# node is not the only runtime the hooks need. The claude-mem plugin ships its
+# own hooks — SessionStart, UserPromptSubmit, PostToolUse — and every one of
+# them shells out to a launcher that runs the real script under bun. Without
+# bun the launcher exits 1 and Claude Code prints
+#
+#     UserPromptSubmit hook error
+#     Failed with non-blocking status code: Error: Bun not found.
+#
+# on every single prompt. Non-blocking, so nothing breaks, but it is noise on
+# every turn and the plugin's memory capture is dead.
+#
+# Plugins themselves are not vendored (see below) — but the runtime they need
+# is a system package, and that is this repo's job.
+if ! have bun; then
+    info "installing bun (required by the claude-mem plugin hooks)"
+    pac bun
+fi
+ok "bun $(bun --version 2>/dev/null || echo 'missing — claude-mem hooks will warn')"
+
 # --------------------------------------------------------------- claude code
 #
 # The native installer, which is what this Mac uses: it drops versioned trees
