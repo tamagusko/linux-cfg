@@ -1,0 +1,68 @@
+{
+  "_comment": [
+    "MCP servers deployed to ~/.claude.json by stage 75.",
+    "",
+    "NOT settings.json: Claude Code does not read `mcpServers` from settings.json.",
+    "It reads ~/.claude.json (user/local scope) and .mcp.json (project scope). An",
+    "mcpServers block in settings.json is silently ignored — it loads without error",
+    "and the servers simply never appear in `claude mcp list`. Five entries sat there",
+    "inert until 2026-08-21.",
+    "",
+    "~/.claude.json cannot be symlinked into the repo the way settings.json is: it",
+    "also holds chat history, per-project state and ~57KB of runtime noise. So the",
+    "declarations live here and stage 75 merges them in, leaving every key it does",
+    "not declare untouched.",
+    "",
+    "Credentials are ${ENV_VAR} references only, expanded by Claude Code from the",
+    "shell that launched it. Real values go in ~/.config/linux-cfg/secrets.env,",
+    "which is outside the repo and sourced by ~/.zshrc. Never paste a literal here."
+  ],
+
+  "nano-banana": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@mindstone/mcp-server-nano-banana"],
+    "env": { "GEMINI_API_KEY": "${GEMINI_API_KEY}" }
+  },
+
+  "_comment_zotero": [
+    "`serve` is NOT a subcommand. zotero-mcp 0.3.1 accepts only",
+    "--transport {stdio,sse}; anything else makes argparse exit 2 before the",
+    "server starts, which Claude Code reports as CONNECTION_CLOSED rather than",
+    "as the usage error it is.",
+    "",
+    "The env list is exactly what the package reads (ZOTERO_API_KEY,",
+    "ZOTERO_LIBRARY_ID, ZOTERO_LIBRARY_TYPE, ZOTERO_LOCAL). UNPAYWALL_EMAIL and",
+    "UNSAFE_OPERATIONS were carried over from an older, different server and are",
+    "read by nothing here — they only produced a standing `Missing environment",
+    "variables` warning."
+  ],
+
+  "zotero": {
+    "type": "stdio",
+    "command": "zotero-mcp",
+    "args": ["--transport", "stdio"],
+    "env": {
+      "ZOTERO_API_KEY": "${ZOTERO_API_KEY}",
+      "ZOTERO_LIBRARY_ID": "${ZOTERO_LIBRARY_ID}",
+      "ZOTERO_LIBRARY_TYPE": "user"
+    }
+  },
+
+  "stitch": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@_davideast/stitch-mcp"]
+  },
+
+  "notebooklm": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "notebooklm-mcp"]
+  },
+
+  "streamable-mcp-server": {
+    "type": "http",
+    "url": "http://127.0.0.1:12306/mcp"
+  }
+}

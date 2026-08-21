@@ -157,49 +157,5 @@
   "agentPushNotifEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754089766006
-  },
-  "mcpServers": {
-    "streamable-mcp-server": {
-      "type": "streamable-http",
-      "url": "http://127.0.0.1:12306/mcp",
-      "description": "Chrome browser automation control service"
-    },
-    "nano-banana": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "nano-banana-mcp"
-      ],
-      "env": {
-        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
-      }
-    },
-    "stitch": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@_davideast/stitch-mcp"
-      ]
-    },
-    "notebooklm": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "notebooklm-mcp"
-      ]
-    },
-    "zotero": {
-      "command": "zotero-mcp",
-      "args": [
-        "serve"
-      ],
-      "env": {
-        "ZOTERO_API_KEY": "<your-api-key>",
-        "ZOTERO_LIBRARY_ID": "<your-library-id>",
-        "ZOTERO_LIBRARY_TYPE": "user",
-        "UNPAYWALL_EMAIL": "<your-email@example.com>",
-        "UNSAFE_OPERATIONS": "all"
-      }
-    }
   }
 }

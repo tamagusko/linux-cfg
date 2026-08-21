@@ -137,9 +137,9 @@ info "after first launch, confirm with:  claude  then  /plugin"
 
 # ---------------------------------------------------------------- mcp secrets
 #
-# settings.json ships with no live credentials — the MCP entries hold only
-# ${GEMINI_API_KEY} (an env reference) and <your-api-key> placeholders. Real
-# values go in ~/.config/linux-cfg/secrets.env, which is outside the repo.
+# mcp-servers.json ships with no live credentials — its entries hold only
+# ${ENV_VAR} references, expanded by Claude Code from the shell that launched
+# it. Real values go in ~/.config/linux-cfg/secrets.env, outside the repo.
 SECRETS="$HOME/.config/linux-cfg/secrets.env"
 if [[ -e "$SECRETS" ]]; then
     ok "secrets file already present: $SECRETS"
@@ -148,10 +148,11 @@ else
     mkdir -p "$(dirname "$SECRETS")"
     if [[ "$DRY_RUN" != "1" ]]; then
         cat >"$SECRETS" <<'SECRETS_TEMPLATE'
-# Credentials for the MCP servers declared in ~/.claude/settings.json.
+# Credentials for the MCP servers declared in
+# dotfiles/claude/mcp-servers.json and deployed to ~/.claude.json.
 #
 # This file is OUTSIDE the git repository on purpose. Never move it in, and
-# never paste a real key into settings.json.
+# never paste a real key into a tracked file.
 #
 # Sourced from ~/.zshrc. Fill in what you use and delete the rest.
 
@@ -161,13 +162,15 @@ else
 # read public ones. Create at https://github.com/settings/tokens
 # export GITHUB_PERSONAL_ACCESS_TOKEN=
 
-# nano-banana (Gemini image generation)
+# nano-banana (Gemini image generation, @mindstone/mcp-server-nano-banana).
+# Create at https://aistudio.google.com/app/apikey
 # export GEMINI_API_KEY=
 
-# zotero-mcp — also needs the entries in settings.json changed from their
-# <your-...> placeholders, or install it with:  uv tool install zotero-mcp
+# zotero-mcp — the server itself is not bundled; install it with:
+#   uv tool install zotero-mcp
 # export ZOTERO_API_KEY=
 # export ZOTERO_LIBRARY_ID=
+# export UNPAYWALL_EMAIL=
 SECRETS_TEMPLATE
         chmod 600 "$SECRETS"
     fi
@@ -180,5 +183,53 @@ ensure_block "$HOME/.zshrc" "claude-secrets" <<'BLOCK'
 BLOCK
 
 warn "MCP servers needing keys stay inert until you fill in $SECRETS"
+
+# ---------------------------------------------------------------- mcp servers
+#
+# Claude Code does NOT read `mcpServers` from settings.json. It reads
+# ~/.claude.json (user and local scope) and .mcp.json (project scope); a block
+# in settings.json loads without complaint and is then ignored, which is how
+# five servers sat dead in this repo until 2026-08-21.
+#
+# ~/.claude.json is not symlinked in the way settings.json is, because it also
+# carries chat history and per-project state. So the declarations live in
+# dotfiles/claude/mcp-servers.json and are merged in here one at a time,
+# leaving anything this repo does not declare alone.
+#
+# Parsed with node, not jq: node is already a hard requirement above, and jq is
+# not otherwise needed by this repo.
+MCP_DECL="$SRC_DIR/mcp-servers.json"
+
+if ! have claude; then
+    warn "claude not on PATH — skipping MCP registration"
+elif [[ ! -r "$MCP_DECL" ]]; then
+    warn "$MCP_DECL missing — skipping MCP registration"
+else
+    # Keys beginning with _ are commentary, not servers.
+    mcp_names=()
+    while IFS= read -r line; do
+        mcp_names+=("$line")
+    done < <(node -e 'const d=require(process.argv[1]);for(const k of Object.keys(d))if(!k.startsWith("_"))console.log(k)' "$MCP_DECL")
+
+    for name in "${mcp_names[@]}"; do
+        cfg="$(node -e 'const d=require(process.argv[1]);process.stdout.write(JSON.stringify(d[process.argv[2]]))' "$MCP_DECL" "$name")"
+
+        # add-json declines to overwrite (it reports "already exists" and exits
+        # 0), so an existing entry is dropped first. This repo is authoritative
+        # for the servers it names; one it does not name is never touched.
+        if claude mcp get "$name" >/dev/null 2>&1; then
+            run claude mcp remove "$name" -s user || true
+        fi
+
+        if run claude mcp add-json "$name" "$cfg" --scope user; then
+            ok "mcp: $name"
+        else
+            warn "mcp: could not register $name"
+        fi
+    done
+
+    info "verify with:  claude mcp list"
+fi
+
 
 ok "claude code stage done"
