@@ -32,6 +32,19 @@ source "$ZSH/oh-my-zsh.sh"
 
 # ------------------------------------------------------------------ environment
 
+# ~/.local/bin is not on Arch's default PATH, but it is where the Claude Code
+# native installer puts its `claude` symlink and where `uv tool install` puts
+# entry points. Set here, above the `command -v` probes below, so tools living
+# there are visible to them.
+#
+# Guarded against re-entry: this file is sourced again by every `source ~/.zshrc`
+# and by nested interactive shells, and an unguarded prepend duplicates the entry
+# each time — as the linux-cfg:cuda block below demonstrates.
+case ":$PATH:" in
+  *":$HOME/.local/bin:"*) ;;
+  *) export PATH="$HOME/.local/bin:$PATH" ;;
+esac
+
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
