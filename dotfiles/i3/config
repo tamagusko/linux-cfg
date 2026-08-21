@@ -380,6 +380,11 @@ exec --no-startup-id sleep 3 && blueman-applet
 # num lock activated
 exec --no-startup-id numlockx on
 
+# Microphone off at login. WirePlumber restores whatever mute state the last
+# session ended in, so without this a session that ended with the mic live
+# starts the next one live. Left-click the mic icon in the bar to turn it on.
+exec --no-startup-id ~/.config/i3/scripts/microphone-mute-at-login
+
 # configure multiple keyboard layouts and hotkey to switch (Alt+CAPSLOCK in this example)
 #exec --no-startup-id setxkbmap -layout 'us,sk' -variant altgr-intl,qwerty -option 'grp:alt_caps_toggle'
 

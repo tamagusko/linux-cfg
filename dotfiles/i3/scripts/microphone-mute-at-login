@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# Mute every microphone at session start, so the mic is off until it is turned
+# on deliberately. The counterpart is scripts/microphone, the bar block whose
+# left-click toggles the default source back on.
+#
+# Why this is needed at all: WirePlumber persists per-route mute state in
+# ~/.local/state/wireplumber/default-routes and restores it at login, so a
+# session that ended with the mic live starts the next one live too. This
+# overrides that restore, in the safe direction only.
+#
+# Started from `exec`, never `exec_always`: an in-place i3 restart
+# ($mod+Shift+r) must not silently cut a mic that is live in a call.
+#
+# Every non-monitor source is muted rather than just @DEFAULT_SOURCE@ — there
+# is more than one input here (webcam, USB mic, bluetooth headset), and
+# whichever one becomes the default later should already be off. Monitor
+# sources are loopbacks of the outputs, not inputs, so they are left alone.
+#
+set -uo pipefail
+
+# PipeWire is socket-activated and need not be answering yet when i3 starts.
+for _ in {1..30}; do
+    pactl info >/dev/null 2>&1 && break
+    sleep 0.5
+done
+
+while IFS=$'\t' read -r _ name _; do
+    [[ "$name" == *.monitor ]] && continue
+    pactl set-source-mute "$name" 1 >/dev/null 2>&1
+done < <(pactl list short sources 2>/dev/null)
+
+# Repaint the bar so the icon agrees with what just happened.
+killall -USR1 i3blocks >/dev/null 2>&1 || true
+
+exit 0
