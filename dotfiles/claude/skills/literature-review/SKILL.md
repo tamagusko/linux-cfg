@@ -398,45 +398,134 @@ Detailed formatting guidelines are in `references/citation_styles.md`. Quick ref
 
 ### Prioritizing High-Impact Papers (CRITICAL)
 
-**Always prioritize influential, highly-cited papers from reputable authors and top venues.** Quality matters more than quantity in literature reviews.
+**Prioritise influential work — but judge influence against the paper's own
+field, never against a fixed number.** Citation rates differ by an order of
+magnitude between disciplines, and absolute thresholds silently rank entire
+fields as unimportant.
 
-#### Citation Count Thresholds
+Measured against OpenAlex on 2026-08-23, two-year mean citedness:
 
-Use citation counts to identify the most impactful papers:
+| Journal | 2-yr mean citedness |
+|---|---|
+| The Lancet | 20.00 |
+| Nature | 18.41 |
+| IEEE Trans. Intelligent Transportation Systems | 8.26 |
+| Transportation Research Part C | 7.51 |
+| Journal of Transport Geography | 6.03 |
 
-| Paper Age | Citation Threshold | Classification |
-|-----------|-------------------|----------------|
-| 0-3 years | 20+ citations | Noteworthy |
-| 0-3 years | 100+ citations | Highly Influential |
-| 3-7 years | 100+ citations | Significant |
-| 3-7 years | 500+ citations | Landmark Paper |
-| 7+ years | 500+ citations | Seminal Work |
-| 7+ years | 1000+ citations | Foundational |
+A fixed "impact factor above 10" cutoff excludes *every leading journal in
+transportation*, and a "500+ citations = landmark" rule describes almost nothing
+in that field. Both would be correct in oncology and badly wrong here.
 
-#### Journal and Venue Tiers
+#### Use field-normalised impact
 
-Prioritize papers from higher-tier venues:
+OpenAlex normalises for field, year, and document type. Request these fields on
+`/works` and use them instead of raw counts:
 
-- **Tier 1 (Always Prefer):** Nature, Science, Cell, NEJM, Lancet, JAMA, PNAS, Nature Medicine, Nature Biotechnology
-- **Tier 2 (Strong Preference):** High-impact specialized journals (IF>10), top conferences (NeurIPS, ICML for ML/AI)
-- **Tier 3 (Include When Relevant):** Respected specialized journals (IF 5-10)
-- **Tier 4 (Use Sparingly):** Lower-impact peer-reviewed venues
+```
+&select=display_name,publication_year,cited_by_count,fwci,citation_normalized_percentile,primary_topic
+```
 
-#### Author Reputation Assessment
+| Field | Meaning |
+|---|---|
+| `fwci` | Field-Weighted Citation Impact. **1.0 = exactly field average.** 2.0 = twice the average for its field and year |
+| `citation_normalized_percentile.value` | Rank within field and year. `0.99` = top 1% |
+| `primary_topic` | The topic, subfield, and field the normalisation is against |
 
-Prefer papers from:
-- **Senior researchers** with high h-index (>40 in established fields)
-- **Leading research groups** at recognized institutions (Harvard, Stanford, MIT, Oxford, etc.)
-- **Authors with multiple Tier-1 publications** in the relevant field
-- **Researchers with recognized expertise** (awards, editorial positions, society fellows)
+Classify on these, not on raw counts:
 
-#### Identifying Seminal Papers
+| Classification | Signal |
+|---|---|
+| Foundational | `citation_normalized_percentile` ≥ 0.999 and 10+ years old |
+| Landmark | `fwci` ≥ 10 |
+| Highly influential | `fwci` ≥ 5, or percentile ≥ 0.99 |
+| Noteworthy | `fwci` ≥ 2 |
+| Typical for its field | `fwci` ≈ 1 |
+| Below field average | `fwci` < 1 |
 
-For any topic, identify foundational work by:
-1. **High citation count** (typically 500+ for papers 5+ years old)
-2. **Frequently cited by other included studies** (appears in many reference lists)
-3. **Published in Tier-1 venues** (Nature, Science, Cell family)
-4. **Written by field pioneers** (often cited as establishing concepts)
+Worked example, measured: a 2010 cycling-infrastructure paper with 1,146
+citations scores `fwci` 52.7 and percentile 0.9992. Raw count alone would not
+distinguish it from a mid-tier biomedical paper of the same age; FWCI shows it is
+roughly fifty times its field's average.
+
+**Two sampling traps, both measured.**
+
+`/works` defaults to sorting by citation count descending, so any "sample" taken
+without an explicit `sort` is the most-cited tail, not a cross-section. Sampling
+2022 works in one transport topic that way gave a median `fwci` of 28 and put
+100% of the sample above 5 — which would make every threshold here meaningless.
+Re-sorted with `sort=publication_date:asc`, the same filter returned papers at
+`fwci` 0.72, 0.26 and 0.24. Always pass an explicit sort before computing any
+distribution.
+
+`fwci` is `None` for works with no citations. Filter those out before taking a
+median rather than treating them as zero.
+
+**Recency caveat.** FWCI is unstable for very recent work — a paper under about
+18 months old has not had time to accumulate a meaningful count. For those, judge
+on venue and content, and say that citations were not yet informative.
+
+#### Derive the field's own top venues
+
+Do not carry a hardcoded prestige list. Build one for whatever field the review
+is actually in, in two calls:
+
+```bash
+# 1. find the topic
+curl -s "https://api.openalex.org/topics?search=urban+transport+accessibility&mailto=$EMAIL"
+#    -> T10298  Urban Transport and Accessibility  (field: Social Sciences)
+
+# 2. see which journals actually carry that literature
+curl -s "https://api.openalex.org/works?filter=primary_topic.id:T10298&group_by=primary_location.source.id&mailto=$EMAIL"
+```
+
+Measured, that returns Transportation Research Record, Journal of Transport
+Geography, Transportation Research Part A, Transport Policy, Journal of Transport
+& Health — the field's real venues, which no generic tier list contains.
+
+**Group works by source, not sources by topic.** Filtering `/sources` on
+`topics.id` returns any journal that has ever published on the topic, so sorting
+that by citedness surfaces high-impact generalists — the same query returned
+*Chemical Society Reviews* and *Nature Reviews Materials* for a transport topic.
+
+Then check each candidate venue:
+
+```bash
+curl -s "https://api.openalex.org/sources?search=Transportation+Research+Part+C&mailto=$EMAIL"
+# is_core=True  2yr_mean_citedness=7.51  h_index=234
+```
+
+`is_core` (CWTS Leiden curated set) is the most portable single signal, because
+it is a membership test rather than a number that means different things in
+different fields.
+
+**A generalist venue is not automatically the better one.** Nature publishes
+almost no transportation engineering; a Transportation Research Part C paper is
+the stronger source for a transport review, not the weaker one. Rank within the
+field the review is about.
+
+#### Author standing
+
+Judge by contribution to *this* topic, not by institutional brand:
+
+- Recurrent authorship in the field's own top venues, identified above
+- Whether the work is cited by the other included studies — a reference list that
+  keeps returning to one group is the real signal
+- h-index **compared with peers in the same field**, since h-index scales with
+  field citation rates exactly as raw counts do
+
+Avoid ranking by named institutions. It correlates with being American,
+English-speaking, and well-funded rather than with being right, and in fields
+such as transportation much of the strongest work comes from European research
+groups and national road authorities that such a list would bury.
+
+#### Identifying seminal papers
+
+1. **Top percentile within its field**, via `citation_normalized_percentile`
+2. **Frequently cited by the other included studies** — count it across the
+   corpus you have already screened
+3. **Published in a venue the field itself uses**, derived as above
+4. **Named as establishing a concept** in the papers that cite it
 
 ## Best Practices
 

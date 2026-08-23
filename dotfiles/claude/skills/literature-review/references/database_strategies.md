@@ -247,51 +247,59 @@ All searches must be documented for reproducibility:
 
 ### Prioritizing High-Impact Papers (CRITICAL)
 
-**Always prioritize papers based on citation count, venue quality, and author reputation.** Quality matters more than quantity.
+**The rules live in SKILL.md, under "Prioritizing High-Impact Papers".** Read
+them there; this section covers only how to apply them per database, so that the
+thresholds have one home and cannot drift apart from it.
 
-#### Citation Metrics in Database Searches
+The short version: judge impact **relative to the paper's own field**, never
+against a fixed citation count or impact factor. Citation rates differ by an
+order of magnitude across disciplines, so absolute cutoffs quietly discard whole
+fields. Use OpenAlex `fwci` (1.0 = field average) and
+`citation_normalized_percentile`, and derive each field's leading venues rather
+than assuming a fixed prestige list.
 
-Use citation counts to identify influential work:
+#### Getting field-normalised metrics per database
 
-| Paper Age | Citations | Classification |
-|-----------|-----------|----------------|
-| 0-3 years | 20+ | Noteworthy |
-| 0-3 years | 100+ | Highly Influential |
-| 3-7 years | 100+ | Significant |
-| 3-7 years | 500+ | Landmark |
-| 7+ years | 500+ | Seminal |
-| 7+ years | 1000+ | Foundational |
+| Database | What it offers | Notes |
+|---|---|---|
+| **OpenAlex** | `fwci`, `citation_normalized_percentile`, `primary_topic` | The only source here with proper field normalisation. Prefer it for ranking |
+| **Semantic Scholar** | `influentialCitationCount`, citation velocity | "Influential" is about citation *context*, not field-normalised. Useful, different question |
+| **Crossref** | `is-referenced-by-count` | Raw count only — normalise it yourself via OpenAlex |
+| **PubMed / PMC** | "Cited by" in PMC | Raw count, and biomedical-only, so cross-field comparison never arises |
+| **Google Scholar** | Sort by citations | Raw count, no API, no normalisation |
 
-**Database-Specific Citation Features:**
-- **Google Scholar:** Sort by citation count, use "Cited by" feature
-- **Semantic Scholar:** "Highly Influential Citations" metric, citation velocity
-- **OpenAlex:** Citation counts, citation context analysis
-- **PubMed:** Use "Cited by" in PMC, check citation counts via Google Scholar
+Request the normalised fields explicitly, since they are not returned by default:
 
-#### Filtering by Journal Quality
-
-Prioritize papers from higher-tier venues:
-
-**Tier 1 (Always Prefer):**
-- Nature, Science, Cell, NEJM, Lancet, JAMA, PNAS
-- Nature Medicine, Nature Biotechnology, Nature Methods
-- Search tip: `source:Nature` or `journal:Nature` in Google Scholar
-
-**Tier 2 (High Priority):**
-- High-impact specialized journals (Impact Factor >10)
-- Top conferences: NeurIPS, ICML, ICLR, CVPR, ACL
-
-**Tier 3 (Include When Relevant):**
-- Respected field-specific journals (IF 5-10)
-
-**PubMed Journal Filtering:**
 ```
-"Nature"[Journal] OR "Science"[Journal] OR "Cell"[Journal]
+&select=display_name,publication_year,cited_by_count,fwci,citation_normalized_percentile,primary_topic
 ```
 
-**Google Scholar Journal Filtering:**
+#### Finding a field's real venues
+
+Derive the list; do not hardcode it. Two calls, and note the direction — group
+**works by source**, not sources by topic:
+
+```bash
+curl -s "https://api.openalex.org/topics?search=YOUR+TOPIC&mailto=$EMAIL"
+curl -s "https://api.openalex.org/works?filter=primary_topic.id:T#####&group_by=primary_location.source.id&mailto=$EMAIL"
 ```
-source:Nature source:Science source:Cell
+
+Filtering `/sources` by `topics.id` instead returns every journal that has ever
+touched the topic, which sorts into high-impact generalists and tells you
+nothing about the field.
+
+Then screen candidate venues on `is_core` (CWTS Leiden curated set), which is a
+membership test and therefore portable across fields, unlike any citation
+threshold.
+
+#### Database-specific venue filtering
+
+Use these only once the venue list has been derived for the actual field:
+
+```
+PubMed:          "Journal Name"[Journal] OR "Other Journal"[Journal]
+OpenAlex:        &filter=primary_location.source.id:S####|S####
+Google Scholar:  source:"Journal Name"
 ```
 
 #### Leveraging "Cited by" Features
