@@ -56,3 +56,8 @@ settings.local.json
 # state, not config. Reinstall them with `skills install` on a new machine.
 dotfiles/claude/skills/find-skills
 dotfiles/claude/skills/systematic-debugging
+
+# Python bytecode. Skills now ship helper scripts (video-tutorial), and running
+# one writes __pycache__ straight into dotfiles/, which is inside the tree.
+__pycache__/
+*.pyc
