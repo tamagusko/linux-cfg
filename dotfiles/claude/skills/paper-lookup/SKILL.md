@@ -1,6 +1,6 @@
 ---
 name: paper-lookup
-description: Search 10 academic paper databases via their REST APIs to find research papers, preprints, and scholarly articles. Covers biomedical literature (PubMed, PMC full text), preprint servers (bioRxiv, medRxiv, arXiv), multidisciplinary indexes (OpenAlex, Crossref, Semantic Scholar), open access aggregators (CORE, Unpaywall). Use this skill whenever the user wants to search for research papers, find citations, look up articles by DOI or PMID, retrieve abstracts or full text, check open access availability, find preprints, explore citation graphs, search by author or keyword, or access any scholarly literature database. Also trigger when the user mentions PubMed, PMC, bioRxiv, medRxiv, arXiv, OpenAlex, Crossref, Semantic Scholar, CORE, Unpaywall, or asks about paper metadata, citation counts, journal articles, manuscript lookups, literature reviews, or systematic searches. Even if the user just says "find papers on X" or "what's been published about Y" or "look up this DOI", this skill should activate.
+description: Search 10 academic paper databases via their REST APIs to find research papers, preprints, and scholarly articles. Covers biomedical literature (PubMed, PMC full text), preprint servers (bioRxiv, medRxiv, arXiv), multidisciplinary indexes (OpenAlex, Crossref, Semantic Scholar), open access aggregators (CORE, Unpaywall). Use this skill whenever the user wants to search for research papers, find citations, look up articles by DOI or PMID, retrieve abstracts or full text, check open access availability, find preprints, explore citation graphs, search by author or keyword, or access any scholarly literature database. Also trigger when the user mentions PubMed, PMC, bioRxiv, medRxiv, arXiv, OpenAlex, Crossref, Semantic Scholar, CORE, Unpaywall, or asks about paper metadata, citation counts, journal articles, manuscript lookups, literature reviews, or systematic searches. Also use to assess a research idea before committing to it: whether it has already been done (duplication test) or whether the gap it targets is still open (gap saturation) -- triggered by "has this been done", "is this novel", "has anyone already", "am I going to be scooped", "is this gap still open", "is this field saturated", or checking an abstract, proposal, or paper draft for prior work. Even if the user just says "find papers on X" or "what's been published about Y" or "look up this DOI", this skill should activate.
 metadata:
   skill-author: K-Dense Inc.
 ---
@@ -48,6 +48,8 @@ Match the user's intent to the right database(s).
 | Funder information | Crossref | OpenAlex |
 | Convert between PMID/PMCID/DOI | PMC (ID Converter) | Crossref |
 | Recent preprints by date | bioRxiv, medRxiv | arXiv |
+| Whether an idea has already been done | OpenAlex + arXiv + Semantic Scholar | see `references/duplication-test.md` |
+| Whether a research gap is still open | OpenAlex | see `references/gap-saturation.md` |
 
 ### Cross-Database Queries
 
@@ -60,6 +62,50 @@ Match the user's intent to the right database(s).
 | Author overview with citation metrics | Semantic Scholar + OpenAlex |
 
 When a query spans multiple needs (e.g., "find papers about CRISPR and get me the PDFs"), query the relevant databases in parallel.
+
+## Assessing a Research Idea
+
+Two workflows that ask a question *about* the literature rather than retrieving
+from it. Both are searches plus an interpretation, and the interpretation is
+where they go wrong, so read the reference file before running one.
+
+| Workflow | Question | Reference |
+|---|---|---|
+| Duplication test | Has this idea already been done, and by whom? | `references/duplication-test.md` |
+| Gap saturation | Is this gap still open, or has the field filled it? | `references/gap-saturation.md` |
+
+Two rules govern both, because both failure modes are silent:
+
+**An empty result set is not a finding.** It is usually a bad query. Never report
+"novel" or "unexplored" — report which queries were run and what each returned,
+and let the user judge the coverage.
+
+**Never trend raw publication counts.** The OpenAlex index grows faster than the
+literature does, so year-on-year counts are not comparable. Normalise against the
+whole corpus and discard the current year. The measured figures are in
+`references/gap-saturation.md`.
+
+## Result Quality Defaults
+
+Applies to every search in this skill, not only the two workflows above. Full
+detail and the verified filter syntax are in `references/source-quality.md`.
+
+- **Quote multi-word concepts.** `title_and_abstract.search` with unquoted terms
+  is fuzzy, not AND, and returns confident-looking noise.
+- **Rank, do not drop:** papers already in the user's Zotero library first, then
+  CWTS-core journals, then preprints from top-100 universities, then the rest.
+- **MDPI is excluded by default**, per the user's standing preference. Say so and
+  give the suppressed count. Two exceptions: duplication tests always include it,
+  since hiding a venue cannot make prior work disappear, and any direct question
+  about an MDPI paper.
+- **OpenAlex has no Q1 field.** Quartiles are Scopus/JCR. `is_core` plus
+  field-relative citedness are proxies — call them proxies.
+
+Both workflows describe the *indexed* literature only. Grey literature — technical
+reports, standards, agency publications — is largely absent, which for
+transportation means TRB/TRID and state DOT output is a real blind spot. Say which
+corpus a verdict covers.
+
 
 ## Common Identifier Formats
 
@@ -191,3 +237,10 @@ Read the relevant reference file before making any API call.
 |---|---|---|
 | CORE | `references/core.md` | 37M+ full texts from OA repositories worldwide |
 | Unpaywall | `references/unpaywall.md` | OA status and PDF links for any DOI |
+
+### Workflows (not databases)
+| Workflow | Reference File | What it does |
+|---|---|---|
+| Duplication test | `references/duplication-test.md` | Ranked prior work for an idea, with the queries shown |
+| Gap saturation | `references/gap-saturation.md` | Whether a gap is open, closing, saturated, or dormant |
+| Source ranking | `references/source-quality.md` | Zotero first, then prominent journals, then top-institution preprints |
