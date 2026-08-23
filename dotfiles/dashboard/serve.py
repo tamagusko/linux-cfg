@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import html
 import importlib.util
+import os
 import re
 import subprocess
 import sys
@@ -28,14 +29,7 @@ PIPELINE = (REPOS / "linux-cfg/dotfiles/claude/skills/manuscript-pipeline"
 PORT = 8787
 REFRESH_SECONDS = 600
 
-WM_CLASS = "AcademicDash"
-COLLAPSED = (900, 74)     # a two-line notification strip
-EXPANDED = (900, 1150)   # fits the panel without owning the monitor
-MONITOR = (1920, 24)      # top-left corner of DP-2, below the i3 bar
-
-# Firefox refuses window.resizeTo() for normal windows, so the buttons post
-# here and we drive i3 directly. Keeps the page a plain document.
-STATE: dict[str, object] = {"expanded": False, "tldr": -1}
+STATE: dict[str, object] = {"tldr": -1}
 
 
 def open_path(target: Path) -> None:
@@ -45,25 +39,6 @@ def open_path(target: Path) -> None:
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except (OSError, ValueError):
         pass
-
-
-def i3(*args: str) -> None:
-    try:
-        subprocess.run(["i3-msg", *args], capture_output=True, timeout=5, check=False)
-    except (subprocess.SubprocessError, OSError):
-        pass
-
-
-def place(width: int, height: int) -> None:
-    sel = f'[class="{WM_CLASS}"]'
-    i3(f"{sel} floating enable")
-    i3(f"{sel} sticky enable")
-    i3(f"{sel} resize set {width} px {height} px")
-    i3(f"{sel} move position {MONITOR[0]} px {MONITOR[1]} px")
-
-# Course states, ordered from not-started to done, with the colour role each
-# gets in the page. "needs you" is the only one that should ever be loud.
-STATE_ORDER = ["briefed", "partial", "built", "gated", "approved", "taught"]
 
 
 @dataclass(frozen=True)
@@ -190,22 +165,7 @@ def esc(t: str) -> str:
     return html.escape(t, quote=True)
 
 
-def summary(nxt, needs: list[str]) -> tuple[str, str]:
-    """The two lines shown when collapsed. Most urgent thing first."""
-    if nxt:
-        days = (nxt.when - date.today()).days
-        when = "TODAY" if days == 0 else ("TOMORROW" if days == 1
-                                          else f"in {days}d")
-        line1 = f"Class {nxt.number} · {when} · {nxt.state}"
-    else:
-        line1 = "No class scheduled"
-    line2 = needs[0] if needs else "Nothing waiting on you"
-    if len(needs) > 1:
-        line2 += f"  (+{len(needs) - 1} more)"
-    return line1, line2
-
-
-def render(expanded: bool = True) -> str:
+def render() -> str:
     today = date.today()
     rows = classes()
     nxt = next_class(rows, today)
@@ -256,8 +216,7 @@ def render(expanded: bool = True) -> str:
         deck = COURSE / "slides_en" / f"class{nxt.number}.qmd"
         STATE["next_deck"] = str(deck if deck.exists() else COURSE / "slides_en")
     footer = (f"<footer>read-only · local files only · refreshes every "
-              f"{REFRESH_SECONDS // 60} min</footer>") if expanded else ""
-    sum1, sum2 = summary(nxt, needs)
+              f"{REFRESH_SECONDS // 60} min</footer>")
 
     chips = "".join(
         f'<i class="s-{esc(r.state)}" title="class {r.number}: {esc(r.raw[:120])}">'
@@ -308,16 +267,11 @@ def render(expanded: bool = True) -> str:
 </section>
 
 <section class="clk" onclick="go('open/repos')" title="open the repos folder"><h1>Repositories ›</h1><ul>{repo_html}</ul></section>
-
-<script>
-function go(p){{fetch('/'+p,{{method:'POST'}}).then(()=>setTimeout(()=>location.reload(),140));}}
-function win(a){{go('win/'+a);}}
-function ev(e){{e.stopPropagation();}}
-</script>""" if expanded else ""
+"""
 
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-{f'<meta http-equiv="refresh" content="{REFRESH_SECONDS}">' if expanded else ""}
+<meta http-equiv="refresh" content="{REFRESH_SECONDS}">
 <title>Academic Dashboard</title>
 <style>
 :root {{
@@ -379,29 +333,26 @@ footer {{ color:var(--dim); font-size:11.5px; text-align:center; margin-top:6px;
 </style></head><body>
 
 <div class="bar">
-  <span class="when">{esc(datetime.now().strftime("%H:%M"))}</span>
-  <span class="grow"></span>
-  <button class="wb" onclick="win('toggle')" title="expand / collapse">{'\u2013' if expanded else '\u25a1'}</button>
-  <button class="wb" onclick="win('max')" title="maximise">\u2b1c</button>
-  <button class="wb" onclick="win('min')" title="hide to scratchpad">\u2212</button>
-  <button class="wb x" onclick="win('close')" title="close">\u00d7</button>
-</div>
-
-<div class="summary" onclick="win('toggle')" title="click to {'collapse' if expanded else 'expand'}">
-  <div class="l1">{esc(sum1)}</div>
-  <div class="l2">{esc(sum2)}</div>
+  <span class="when">{esc(today.strftime("%a %d %B"))} · {esc(datetime.now().strftime("%H:%M"))}</span>
 </div>
 
 {detail}
 
 {footer}
+<script>
+function go(p) {{
+  fetch('/' + p, {{method: 'POST'}}).then(function () {{
+    setTimeout(function () {{ location.reload(); }}, 120);
+  }});
+}}
+function ev(e) {{ e.stopPropagation(); }}
+</script>
 </body></html>"""
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         route, _, action = self.path.strip("/").partition("/")
-        sel = f'[class="{WM_CLASS}"]'
 
         if route == "tldr":
             idx = int(action) if action.isdigit() else -1
@@ -425,17 +376,8 @@ class Handler(BaseHTTPRequestHandler):
             open_path(targets.get(action, REPOS))
             return self._no_content()
 
-        if action == "toggle":
-            STATE["expanded"] = not STATE["expanded"]
-            place(*(EXPANDED if STATE["expanded"] else COLLAPSED))
-        elif action == "max":
-            STATE["expanded"] = True
-            place(880, 1560)
-        elif action == "min":
-            # i3 has no minimise; the scratchpad is its equivalent.
-            i3(f"{sel} move scratchpad")
-        elif action == "close":
-            i3(f"{sel} kill")
+        # Window geometry is the page's job now (window.resizeTo/moveTo), so
+        # the server only tracks how much content to render.
         self._no_content()
 
     def _no_content(self) -> None:
@@ -445,7 +387,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         try:
-            body = render(STATE["expanded"]).encode("utf-8")
+            body = render().encode("utf-8")
         except Exception as exc:  # noqa: BLE001 - never show a blank screen
             body = (f"<body style='font:14px monospace;padding:2rem'>"
                     f"dashboard error: {html.escape(str(exc))}</body>").encode()

@@ -402,26 +402,10 @@ exec --no-startup-id ~/.config/i3/scripts/microphone-mute-at-login
 exec_always --no-startup-id ~/.config/i3/scripts/monitor-layout
 
 # Academic dashboard --------------------------------------------------------
-#
-# A local read-only page (teaching + manuscript state) served by the user unit
-# academic-dashboard.service on 127.0.0.1:8787. The window is a chrome-less
-# Firefox running its own profile, tagged WM_CLASS=AcademicDash so it can be
-# placed without matching the main browser.
-#
-# It floats, sticky, as a two-line strip at the top of the vertical monitor:
-# a tiled window would own a whole workspace and displace working windows.
-# Sticky keeps it visible across workspace switches; the server resizes it via
-# i3-msg when the window buttons are clicked, because Firefox will not let a
-# page resize its own window.
-for_window [class="AcademicDash"] floating enable, sticky enable, border none
-for_window [class="AcademicDash"] resize set 900 px 74 px
-for_window [class="AcademicDash"] move position 1920 px 24 px
-
-# $mod+Shift+d brings it back after the minimise button hides it to the
-# scratchpad ($mod+d is rofi).
-bindsym $mod+Shift+d [class="AcademicDash"] scratchpad show
-
-exec --no-startup-id ~/.config/dashboard/launch.sh
+# A system-tray applet, started by ~/.config/autostart/academic-dashboard.desktop
+# (dex runs those). No window rules: there is no window to place, which is the
+# point of a tray applet. i3bar already shows the tray via `tray_output primary`
+# below; change that to $mon_vert to move the icon to the portrait monitor.
 
 # set wallpaper
 exec --no-startup-id sleep 2 && nitrogen --restore

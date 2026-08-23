@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Academic Dashboard
+Comment=Teaching and research status in the system tray
+Exec=sh -c 'python3 "$HOME/repos/linux-cfg/dotfiles/dashboard/tray.py"'
+Terminal=false
+X-GNOME-Autostart-enabled=true
