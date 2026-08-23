@@ -13,8 +13,10 @@
 ### Academic Background
 - **Degree**: Computer Science PhD
 - **Target Venues**:
-  - Top conferences: NeurIPS, ICML, ICLR, KDD
-  - High-impact journals: Nature, Science, Cell, PNAS
+  - Journals: Transportation Research Part A-F, Accident Analysis & Prevention,
+    IEEE T-ITS, Journal of Transport Geography, Automation in Construction,
+    Sustainable Cities and Society, Transportation Engineering
+  - Conferences: TRB Annual Meeting, IEEE ITSC, TRA, ANPET, CVPR/ICCV workshops
 - **Focus**: Academic writing quality, logical coherence, natural expression
 
 ### Tech Stack Preferences
@@ -104,13 +106,16 @@ Ideation → ML Development → Experiment Analysis → Paper Writing → Self-R
 - **results-analysis**: Strict experiment analysis (rigorous statistics, scientific figures, ablation studies)
 - **results-report**: Complete post-experiment summary reporting (retrospection, decision support, Obsidian results reports)
 - **citation-verification**: Citation verification (multi-layer: format→API→info→content)
-- **daily-paper-generator**: Daily paper generator for research tracking
+- **daily-paper-generator**: Daily paper generator. Upstream template, written for
+  EEG and brain decoding; the topic filters do not match this user's field and it
+  is unused. Use `paper-lookup` instead.
 
 ### 📝 Paper Writing & Publication (7 skills)
 
 - **ml-paper-writing**: ML/AI paper writing assistance
-  - Top conferences: NeurIPS, ICML, ICLR, ACL, AAAI, COLM
-  - Journals: Nature, Science, Cell, PNAS
+  - Journals: TR-A through TR-F, Accident Analysis & Prevention, IEEE T-ITS,
+    Journal of Transport Geography, Transportation Engineering
+  - Conferences: TRB, IEEE ITSC, TRA, ANPET
 - **writing-anti-ai**: Remove AI writing patterns, bilingual (Chinese/English)
 - **paper-self-review**: Paper self-review (6-item quality checklist)
 - **review-response**: Systematic rebuttal writing

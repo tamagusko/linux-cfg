@@ -126,7 +126,14 @@ def train_model(cfg: Config) -> Model:
 
 ### Factory & Registry Pattern
 
-All modules must use factory and registry patterns:
+**Scope: this applies to ML training projects with swappable components.** It is
+not a general rule, and applying it to the research and service repos here would
+contradict their own guidance ("No abstractions for single-use code"). None of
+camina, intersection-safety-monitor, digital_twin or the FastAPI services use
+factory/registry, and they are right not to. Reach for it when a project really
+does select among several datasets, models or trainers by name from config.
+
+Within that scope, modules use factory and registry patterns:
 
 ```python
 # dataset/__init__.py

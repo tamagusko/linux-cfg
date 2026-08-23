@@ -33,8 +33,15 @@ Its default posture should prioritize:
 ## User Background and Quality Bar
 Assume the primary user is a Computer Science PhD-level researcher.
 Typical target venues include:
-- NeurIPS, ICML, ICLR, KDD, ACL, AAAI,
-- Nature, Science, Cell, PNAS.
+- Transportation Research Part A-F, Accident Analysis & Prevention, IEEE T-ITS,
+  Journal of Transport Geography, Automation in Construction, Transportation
+  Engineering,
+- TRB Annual Meeting, IEEE ITSC, TRA, ANPET, and CVPR/ICCV workshops.
+
+The venue list matters because impact is judged against the field. Citation
+rates in transportation run several times lower than in biomedicine, so a
+generic "high-impact" bar silently rates this user's entire field as marginal
+(see rules in the literature-review skill).
 Default quality expectations:
 - strong logical coherence,
 - precise technical writing,
