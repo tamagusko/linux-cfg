@@ -112,10 +112,9 @@ Rank the closest work and assign each a relationship, not a score:
 | **Adjacent** | Same method elsewhere, or same problem by other means. Cite it. |
 | **Context** | Shares vocabulary only. |
 
-Order the results by the policy in `source-quality.md` — Zotero first, then
-prominent journals, then top-institution preprints. One exception: **run the
-duplication test with MDPI included.** Suppressing a venue cannot make prior
-work stop existing.
+Order by the policy in `source-quality.md`: relationship first, then source
+within each relationship group. Never let venue ranking move a duplicate below a
+merely-adjacent paper — the relationship is the finding, the venue is a detail.
 
 Close with the queries run and the rungs that returned nothing, then:
 

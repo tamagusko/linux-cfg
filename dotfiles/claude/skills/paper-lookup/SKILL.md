@@ -92,12 +92,15 @@ detail and the verified filter syntax are in `references/source-quality.md`.
 
 - **Quote multi-word concepts.** `title_and_abstract.search` with unquoted terms
   is fuzzy, not AND, and returns confident-looking noise.
-- **Rank, do not drop:** papers already in the user's Zotero library first, then
-  CWTS-core journals, then preprints from top-100 universities, then the rest.
-- **MDPI is excluded by default**, per the user's standing preference. Say so and
-  give the suppressed count. Two exceptions: duplication tests always include it,
-  since hiding a venue cannot make prior work disappear, and any direct question
-  about an MDPI paper.
+- **Rank, never drop.** Nothing is filtered out for its source. Relevance decides
+  the order first; source only breaks ties between comparable results.
+- **Source order:** already cited in the project's own `.bib`/`.bbl`, then the
+  user's Zotero library, then CWTS-core journals, then preprints from top-100
+  universities, then the rest. Check the local bibliography first — it and Zotero
+  routinely disagree, and the local one is what the paper actually cites.
+- **MDPI is demoted, not removed** — it loses ties within its band, so an MDPI
+  paper in a core journal still outranks a non-core one. Mark such results and
+  say the ordering was applied.
 - **OpenAlex has no Q1 field.** Quartiles are Scopus/JCR. `is_core` plus
   field-relative citedness are proxies — call them proxies.
 

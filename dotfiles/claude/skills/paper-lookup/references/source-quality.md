@@ -6,23 +6,54 @@ source can hide a strong one.
 
 ## Priority order
 
-1. **Already in the user's Zotero library** — they have read it, or meant to
-2. **Prominent indexed journals** — CWTS-core, high field-relative citedness
-3. **Preprints from top-100 universities** — where fast-moving fields live
-4. **Everything else** — shown, but below the fold
+Sort by **relevance first**, then by source, in this order:
 
-Never *drop* a result for being low-priority. Reorder, and say what the ordering
-is. A duplicate published in an obscure venue is still a duplicate.
+1. **Already cited in the project's own bibliography** — the strongest signal
+2. **Already in the user's Zotero library** — collected, if not yet cited
+3. **Prominent indexed journals** — CWTS-core, high field-relative citedness
+4. **Preprints from top-100 universities** — where fast-moving fields live
+5. **Everything else** — shown, lower down
+6. **MDPI** — demoted within its band, never removed
 
-## 1. Zotero first
+**Nothing is ever dropped for its source.** Every rule here reorders; none
+filters. A duplicate published in an obscure venue is still a duplicate, and a
+search that hides it has failed at the only job that mattered.
 
-The `zotero` MCP server is configured (`zotero_search_items`,
-`zotero_item_metadata`, `zotero_item_fulltext`). After assembling results, search
-Zotero for each strong candidate by title or DOI and mark the hits.
+## 1. What the user already has, first
 
-This matters for two reasons: a paper already in the library needs no retrieval,
-and — more useful — a duplication test that surfaces something the user *already
-collected* is telling them they knew about the collision and forgot.
+Two places to check, and they hold different things.
+
+**The project's own bibliography.** If the working directory is a paper, its
+`.bib` or `.bbl` is the authoritative list of what the user has already engaged
+with. Grep it for each candidate's author surname, title fragment, and DOI. A
+hit means "already cited" — the strongest possible signal, and it converts a
+scary duplication result into a solved one.
+
+**Zotero**, via the configured MCP server (`zotero_search_items`,
+`zotero_item_metadata`, `zotero_item_fulltext`). This is the broader library:
+what has been collected, not necessarily what a given paper cites.
+
+Check the local bibliography **first**. Measured on a real draft, 2026-08-23: of
+four candidates surfaced by a duplication test, the two that mattered were both
+cited in `main.bbl` and neither was in Zotero — while Zotero returned 115 items
+for "cycling" and 34 for the user's own name, so it was working correctly. The
+two stores were simply out of sync, which is normal when a paper's references are
+managed in BibTeX.
+
+Searching Zotero alone would have reported the closest known neighbour as an
+unknown threat.
+
+### Query quirks
+
+`zotero_search_items` treats a hyphen as OR, so `V-RoAst` matches anything
+containing "V" — write `V RoAst`. Use `qmode='everything'` to reach abstracts and
+attachment full text; the default covers only title, creator, and year.
+
+### Why it is worth the calls
+
+A paper already held needs no retrieval. More usefully, a duplication test that
+surfaces something the user *already collected and forgot* is a different and
+more urgent finding than one that surfaces a stranger's work.
 
 ## 2. Journal prominence
 
@@ -59,33 +90,59 @@ curl -s "https://api.openalex.org/sources?search=Transportation+Research+Part+C&
 **Never compare citedness across fields.** A 7.51 in transportation is not
 weaker than a 15 in molecular biology; the fields cite at different rates.
 
-## 3. Excluding MDPI
+## 3. Demoting MDPI
 
-The user's default is to avoid MDPI. Its OpenAlex publisher id is
-`P4310310987` (1.99M works). Negate with `!`:
+The user's preference is that MDPI ranks **below** comparable work — not that it
+disappears. Nothing is ever filtered out on the basis of publisher.
 
-```
-&filter=...,primary_location.source.host_organization:!https://openalex.org/P4310310987
-```
-
-Verified on `"cycling infrastructure"`, 2026-08-23 — the arithmetic is exact:
+Do not use a query filter for this. Demotion is a sort applied after retrieval,
+so the query stays complete and the count stays honest. Ask for the publisher in
+the response and tag each result:
 
 ```
-baseline           2265
-exclude MDPI       2167
-MDPI only            98      (2265 - 98 = 2167)
+&select=display_name,publication_year,doi,cited_by_count,primary_location
 ```
 
-**This is a default, not a rule, and it should be stated in the output.** MDPI is
-uneven rather than uniformly poor — some of its titles are well regarded and
-`is_core` true. Two cases override the default:
+`primary_location.source.host_organization_name` carries the publisher;
+MDPI's OpenAlex id is `P4310310987`.
 
-- A **duplication test**. Suppressing a venue cannot make prior work stop
-  existing. Run duplication tests with MDPI included, and label the hits.
-- The user asks about a specific MDPI paper or journal.
+### The sort
 
-When the filter is applied, say so and give the count that was suppressed, so the
-user knows what they are not seeing.
+Rank on venue band first, and let MDPI lose ties within a band:
+
+| Rank | Band |
+|---|---|
+| 1 | CWTS-core, not MDPI |
+| 2 | CWTS-core, MDPI |
+| 3 | Not core, not MDPI |
+| 4 | Not core, MDPI |
+
+So an MDPI paper in a core journal still outranks a non-core paper from any
+publisher. That is the intended behaviour: the preference is a tiebreak against
+comparable work, not a claim that MDPI is worse than everything else.
+
+### Relevance outranks venue, always
+
+**Demotion applies only among results of similar relevance.** A paper that
+duplicates the user's idea goes at the top whatever its publisher, flagged for
+what it is. Sorting a duplicate beneath a loosely-related paper from a better
+journal would defeat the purpose of the search.
+
+In practice: establish the relationship first — duplicate, near-neighbour,
+adjacent, context — then apply venue ranking *within* each relationship group.
+
+This is not hypothetical. Tested on the user's own Colourways draft, the closest
+cycling-domain neighbour was in MDPI *Applied Sciences*, and `is_core` true. It
+belongs near the top because of what it is about, and a publisher filter would
+have hidden it entirely.
+
+### Say what the ordering was
+
+MDPI results are present, so the user must be able to see why they sit where
+they do:
+
+> Ranked by relevance, then venue. Two results are MDPI (marked ·M) and sit
+> below comparable non-MDPI work in the same band. Nothing was removed.
 
 ## 4. Preprints, ranked by institution
 
@@ -126,6 +183,6 @@ national road authorities that this ranking will bury.
 
 State the policy that produced the ordering:
 
-> Ranked: 2 already in your Zotero library, then 14 from CWTS-core journals,
-> then 6 preprints from top-100 universities. MDPI excluded (98 results
-> suppressed); re-run with `--include-mdpi` to see them.
+> Ranked by relevance, then source: 2 already in your Zotero library, 14 from
+> CWTS-core journals, 6 preprints from top-100 universities, 3 from MDPI titles
+> (·M, demoted within their band). 25 results, none removed.
