@@ -6,13 +6,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
-  "statusLine": {
-    "type": "command",
-    "command": "node \"$HOME/.claude/scripts/statusline.js\"",
-    "refreshInterval": 60,
-    "padding": 0
-  },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -75,6 +69,12 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "node \"$HOME/.claude/scripts/statusline.js\"",
+    "padding": 0,
+    "refreshInterval": 60
+  },
   "enabledPlugins": {
     "code-simplifier@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
@@ -101,10 +101,11 @@
     "everything-claude-code@everything-claude-code": true,
     "vercel@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
     "mattpocock-skills@claude-plugins-official": true,
     "frontend-design@claude-code-plugins": true,
-    "playground@claude-plugins-official": true
+    "playground@claude-plugins-official": true,
+    "code-review@claude-code-plugins": true,
+    "figma@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
