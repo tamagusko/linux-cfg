@@ -34,6 +34,11 @@ if [[ "$root_fs" == "btrfs" ]]; then
     # grub-btrfs exposes snapshots in the boot menu, so recovery does not
     # require a live USB. Only useful with GRUB.
     if [[ -d /boot/grub ]]; then
+        # inotify-tools is only an optional dependency of grub-btrfs, but the
+        # daemon exits immediately without it ("inotifywait was not found"),
+        # and grub-btrfs.cfg is then never generated. Found on 2026-08-28
+        # after the service had been failing on every boot.
+        pac inotify-tools
         aur grub-btrfs
         run sudo systemctl enable --now grub-btrfsd
     else
