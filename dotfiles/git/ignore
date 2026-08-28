@@ -1,0 +1,14 @@
+# Global git excludes. Git reads $XDG_CONFIG_HOME/git/ignore on its own when
+# core.excludesFile is unset, so this needs no gitconfig entry — stage 70 links
+# ~/.config/git -> dotfiles/git and it takes effect everywhere.
+#
+# Keep this to files that are noise in *every* repo. Project-specific rules
+# belong in that project's .gitignore, where collaborators also get them.
+# Git never writes into this directory (config lives in ~/.gitconfig), so the
+# symlink-into-working-tree hazard from check-repo-hygiene.sh does not apply.
+
+# Claude Code session logs, written by the session-summary hook into the
+# .claude/logs/ of whatever directory a session was started in. Nothing reads
+# them back; the papers repo accumulated 47 of them across 25 subfolders.
+# .claude/skills/ and .claude/project-memory/ are deliberate config — not ignored.
+**/.claude/logs/
