@@ -52,7 +52,7 @@ in without renumbering the rest.
 | `30-packages` | `packages/pacman.txt` as a batch, `packages/aur.txt` one at a time |
 | `40-dev` | uv, docker, git defaults |
 | `50-input` | Cedilla on a US-International layout |
-| `55-bluetooth` | Enables `bluetooth.service`, clears rfkill blocks |
+| `55-bluetooth` | Enables `bluetooth.service`, clears rfkill blocks; asks before trusting paired audio devices for auto-connect |
 | `60-latex` | TeX Live, `pandoc-cli`, `pandoc-crossref`, Quarto |
 | `70-dotfiles` | oh-my-zsh, powerlevel10k, `.zshrc`, symlinks into `~/.config` |
 | `75-claude` | Claude Code CLI, nodejs for its hooks, `~/.claude` from `dotfiles/claude` |

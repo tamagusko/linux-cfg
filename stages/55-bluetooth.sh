@@ -59,10 +59,20 @@ fi
 # having once paired a phone should not silently let it open services
 # unprompted.
 #
+# Opt-in, because auto-connect has a cost on combo cards: the RTL8852CE here
+# runs wifi and bluetooth on one 2.4 GHz radio, and a trusted headset that
+# reconnects every time it is switched on holds an A2DP stream that wifi then
+# has to time-share with. Answering no keeps pairing as it is: the headset
+# still connects, but only when told to from blueman. Nothing is untrusted on
+# "no" — undo by hand with `bluetoothctl untrust <mac>` if it was trusted
+# before.
+#
 # A fresh machine has nothing paired yet, so this is a no-op there and takes
 # effect on the next run, after the headset has been paired once by hand.
 if [[ "$DRY_RUN" == "1" ]]; then
     info "dry run — not changing device trust"
+elif ! confirm "trust paired audio devices so they auto-connect on power-on?"; then
+    info "skipped; connect from blueman, or run 'bluetoothctl trust <mac>' later"
 else
     trusted_any=0
     # IFS is $'\n\t' from common.sh, so a plain `read` would swallow the whole
