@@ -339,3 +339,24 @@ After each task, proactively provide a brief summary:
 💡 Next Steps
 1. [Targeted suggestions]
 ```
+# graphify
+- **graphify** (`~/.claude/skills/graphify/SKILL.md`) - any input to knowledge graph. Trigger: `/graphify`
+When the user types `/graphify`, use the installed graphify skill or instructions before doing anything else.
+
+## Graphify Workflow (standing rule, all projects)
+
+- **Orient from the graph, not the folder.** When a repo has `graphify-out/graph.json`,
+  answer structure questions ("how does X connect to Y", "what is central", "trace the
+  flow") with `graphify query` / `path` / `explain` first, and read `GRAPH_REPORT.md`
+  before walking the tree. Do not map the whole folder by hand when a graph exists.
+  Still open the real source before editing — the graph says *where*, not *what the
+  lines say*.
+- **Resuming a project:** if `graphify-out/` exists, run `/graphify . --update` at the
+  start of work so docs/papers changed since the last run are re-extracted. If it does
+  not exist, run `/graphify .` once and `graphify hook install` (post-commit rebuild of
+  the code graph, no LLM needed).
+- **After changes:** the post-commit hook keeps the code side current. After editing
+  docs, papers or images in a session, run `/graphify . --update` before closing.
+- **Semantic extraction:** the Gemini backend has produced near-empty results (one node
+  per file, no edges) on this machine; prefer the skill's Claude subagent path for
+  docs/papers/images unless Gemini is verified on a sample first.
