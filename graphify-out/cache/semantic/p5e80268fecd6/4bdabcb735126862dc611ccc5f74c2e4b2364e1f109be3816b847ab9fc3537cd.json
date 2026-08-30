@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_humanizer_skill", "label": "Humanizer Skill", "file_type": "document", "source_file": "dotfiles/claude/skills/humanizer/SKILL.md", "rationale": "Skill for removing AI-generated writing patterns based on Wikipedia's 'Signs of AI writing'."}], "edges": [], "hyperedges": []}

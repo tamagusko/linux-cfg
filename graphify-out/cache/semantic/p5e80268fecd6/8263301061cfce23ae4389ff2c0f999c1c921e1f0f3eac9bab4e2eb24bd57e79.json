@@ -1,0 +1,1 @@
+{"nodes": [{"id": "cox_ph_model", "label": "Cox Proportional Hazards Model", "file_type": "concept", "source_file": "dotfiles/claude/skills/scikit-survival/references/cox-models.md", "rationale": "Semi-parametric model relating covariates to event time via hazard functions."}], "edges": [], "hyperedges": []}

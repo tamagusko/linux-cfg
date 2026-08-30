@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_daily_paper_generator_skill", "label": "Daily Paper Generator Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/daily-paper-generator/SKILL.md", "rationale": "Automated workflow for arXiv research discovery and summarization."}], "edges": [], "hyperedges": []}

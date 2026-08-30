@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_test_test", "label": "/sc:test", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/test.md", "rationale": "Executes tests with coverage analysis."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "semantic_scholar_semantic_scholar", "label": "Semantic Scholar", "file_type": "document", "source_file": "dotfiles/claude/skills/paper-lookup/references/semantic-scholar.md", "rationale": "AI-powered index with citation context, influential citations, and TLDRs."}], "edges": [], "hyperedges": []}

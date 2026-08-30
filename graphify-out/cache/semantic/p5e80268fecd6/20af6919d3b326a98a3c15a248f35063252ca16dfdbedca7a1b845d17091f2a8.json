@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_humanizer_warp", "label": "Humanizer WARP Guide", "file_type": "document", "source_file": "dotfiles/claude/skills/humanizer/WARP.md", "rationale": "Guidance for the WARP terminal when working with the Humanizer repository."}], "edges": [], "hyperedges": []}

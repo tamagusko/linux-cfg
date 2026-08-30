@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_harden", "label": "Harden Command", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/harden.md", "rationale": "Resilience testing against extreme inputs, errors, and i18n expansion."}], "edges": [], "hyperedges": []}

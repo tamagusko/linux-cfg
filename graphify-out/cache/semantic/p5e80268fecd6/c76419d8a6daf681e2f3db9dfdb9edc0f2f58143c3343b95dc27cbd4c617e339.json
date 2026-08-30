@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_matlab_skill", "label": "MATLAB/Octave Skill", "file_type": "document", "source_file": "dotfiles/claude/skills/matlab/SKILL.md", "rationale": "Numerical computing environment for matrix operations and scientific computing."}], "edges": [], "hyperedges": []}

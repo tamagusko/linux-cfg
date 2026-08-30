@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_encode_encode", "label": "ENCODE API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/encode.md", "rationale": "Reference for functional elements in the genome."}], "edges": [], "hyperedges": []}

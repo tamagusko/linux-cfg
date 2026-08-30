@@ -1,0 +1,1 @@
+{"nodes": [{"id": "paperzilla_skill", "label": "Paperzilla Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/paperzilla/SKILL.md", "rationale": "Skill for interacting with Paperzilla projects, recommendations, and canonical papers."}], "edges": [], "hyperedges": []}

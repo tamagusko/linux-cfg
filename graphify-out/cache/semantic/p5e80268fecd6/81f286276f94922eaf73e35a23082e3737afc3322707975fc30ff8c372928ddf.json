@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_minimalist_ui_skill", "label": "Minimalist UI Protocol", "file_type": "document", "source_file": "dotfiles/claude/skills/minimalist-ui/SKILL.md", "rationale": "Enforces a specific editorial-style UI design protocol for frontend engineering."}], "edges": [], "hyperedges": []}

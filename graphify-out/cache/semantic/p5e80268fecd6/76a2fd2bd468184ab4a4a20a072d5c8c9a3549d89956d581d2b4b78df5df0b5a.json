@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_datacommons_datacommons", "label": "Google Data Commons API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/datacommons.md", "rationale": "Reference for aggregated statistical data via GraphQL/SPARQL."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_humanizer_readme", "label": "Humanizer README", "file_type": "document", "source_file": "dotfiles/claude/skills/humanizer/README.md", "rationale": "Human-readable overview and installation instructions for the Humanizer skill."}], "edges": [], "hyperedges": []}

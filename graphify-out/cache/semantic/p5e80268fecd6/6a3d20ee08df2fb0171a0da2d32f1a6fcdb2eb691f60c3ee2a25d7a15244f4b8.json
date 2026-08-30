@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_critique", "label": "Critique Command", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/critique.md", "rationale": "Comprehensive design review process involving dual-agent assessment and heuristic scoring."}], "edges": [], "hyperedges": []}

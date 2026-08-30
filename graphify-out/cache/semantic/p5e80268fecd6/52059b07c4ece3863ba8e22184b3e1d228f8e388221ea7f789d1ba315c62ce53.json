@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_img2threejs_architecture", "label": "img2threejs Architecture", "file_type": "document", "source_file": "dotfiles/claude/skills/img2threejs/docs/ARCHITECTURE.md", "rationale": "Detailed technical overview of the staged pipeline, build passes, and script roles."}], "edges": [], "hyperedges": []}

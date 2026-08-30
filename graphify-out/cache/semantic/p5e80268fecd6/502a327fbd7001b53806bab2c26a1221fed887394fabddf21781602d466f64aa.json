@@ -1,0 +1,1 @@
+{"nodes": [{"id": "arxiv_arxiv", "label": "arXiv", "file_type": "document", "source_file": "dotfiles/claude/skills/paper-lookup/references/arxiv.md", "rationale": "Preprint server for physics, math, CS, and related fields; returns Atom XML."}], "edges": [], "hyperedges": []}

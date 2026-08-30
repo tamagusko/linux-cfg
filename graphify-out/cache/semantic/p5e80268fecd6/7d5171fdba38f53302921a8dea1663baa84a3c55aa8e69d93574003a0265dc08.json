@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_improve_improve", "label": "/sc:improve", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/improve.md", "rationale": "Applies systematic improvements to code quality and performance."}], "edges": [], "hyperedges": []}

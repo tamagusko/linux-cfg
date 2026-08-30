@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_document", "label": "Document Command", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/document.md", "rationale": "Generates DESIGN.md to capture visual systems and design tokens."}], "edges": [], "hyperedges": []}

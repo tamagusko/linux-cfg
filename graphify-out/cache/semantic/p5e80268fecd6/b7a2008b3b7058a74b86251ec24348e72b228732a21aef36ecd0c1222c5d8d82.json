@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_statistical_reviewer", "label": "Statistical Reviewer", "file_type": "agent", "source_file": "dotfiles/claude/agents/statistical-reviewer.md", "rationale": "Validates statistical methods, test selection, and ML model validation rigor."}], "edges": [], "hyperedges": []}

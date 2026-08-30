@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_alphavantage_alphavantage", "label": "Alpha Vantage API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/alphavantage.md", "rationale": "Reference for financial market data including stocks, forex, and crypto."}], "edges": [], "hyperedges": []}

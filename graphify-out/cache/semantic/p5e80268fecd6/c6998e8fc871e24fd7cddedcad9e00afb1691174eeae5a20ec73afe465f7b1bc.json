@@ -1,0 +1,1 @@
+{"nodes": [{"id": "grimoire_review_self_correction", "label": "Self-Correction Loop", "file_type": "document", "source_file": "dotfiles/claude/skills/img2threejs/grimoire/review/self_correction.md", "rationale": "Root cause analysis and fidelity estimation for iterative refinement."}], "edges": [], "hyperedges": []}

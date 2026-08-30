@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_doctor", "label": "Doctor Command", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/doctor.md", "rationale": "Maintenance tool for repairing drift in Impeccable artifacts (PRODUCT.md, DESIGN.md)."}], "edges": [], "hyperedges": []}

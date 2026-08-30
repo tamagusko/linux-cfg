@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_matplotlib_references_common_issues", "label": "Matplotlib Common Issues", "file_type": "document", "source_file": "dotfiles/claude/skills/matplotlib/references/common_issues.md", "rationale": "Troubleshooting guide for display, layout, memory, and performance issues in Matplotlib."}], "edges": [], "hyperedges": []}

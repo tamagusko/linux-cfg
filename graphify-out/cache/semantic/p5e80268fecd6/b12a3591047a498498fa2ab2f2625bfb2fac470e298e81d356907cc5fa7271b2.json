@@ -1,0 +1,1 @@
+{"nodes": [{"id": "paper_self_review_skill", "label": "Paper Self-Review Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/paper-self-review/SKILL.md", "rationale": "Systematic quality checking tool for researchers to conduct self-review before submission."}], "edges": [], "hyperedges": []}

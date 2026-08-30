@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_materials_project_materials_project", "label": "Materials Project API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/materials-project.md", "rationale": "Reference for computed materials properties."}], "edges": [], "hyperedges": []}

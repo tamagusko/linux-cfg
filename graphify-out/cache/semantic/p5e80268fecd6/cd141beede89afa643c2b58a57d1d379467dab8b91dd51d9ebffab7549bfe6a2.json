@@ -1,0 +1,1 @@
+{"nodes": [{"id": "openalex_openalex", "label": "OpenAlex", "file_type": "document", "source_file": "dotfiles/claude/skills/paper-lookup/references/openalex.md", "rationale": "Broad multidisciplinary index of 250M+ scholarly works, authors, and institutions."}], "edges": [], "hyperedges": []}

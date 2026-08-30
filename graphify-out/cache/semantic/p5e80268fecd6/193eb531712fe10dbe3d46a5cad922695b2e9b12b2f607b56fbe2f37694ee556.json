@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_emdb_emdb", "label": "EMDB API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/emdb.md", "rationale": "Reference for electron microscopy data."}], "edges": [], "hyperedges": []}

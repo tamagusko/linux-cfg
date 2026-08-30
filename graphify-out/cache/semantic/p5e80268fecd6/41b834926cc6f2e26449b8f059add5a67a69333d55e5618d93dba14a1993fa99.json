@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_android", "label": "Android Platform Reference", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/android.md", "rationale": "Defines Material Design 3 standards, Jetpack Compose usage, and Android-specific UX patterns."}], "edges": [], "hyperedges": []}

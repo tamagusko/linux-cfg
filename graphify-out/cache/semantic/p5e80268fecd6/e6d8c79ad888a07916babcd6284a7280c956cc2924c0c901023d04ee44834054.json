@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_matlab_references_programming", "label": "MATLAB Programming Reference", "file_type": "document", "source_file": "dotfiles/claude/skills/matlab/references/programming.md", "rationale": "Provides core syntax and programming patterns for MATLAB including scripts, functions, control flow, and OOP."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "forge_requirements", "label": "Forge Requirements", "file_type": "code", "source_file": "dotfiles/claude/skills/img2threejs/forge/requirements.txt", "rationale": "Specifies Python 3.10+ standard library only constraint.", "verification": "unverified"}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_extract", "label": "Extract Flow", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/extract.md", "rationale": "Process for identifying and consolidating reusable components and tokens."}], "edges": [], "hyperedges": []}

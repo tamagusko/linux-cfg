@@ -1,0 +1,1 @@
+{"nodes": [{"id": "uv_package_manager_uv", "label": "uv", "file_type": "code", "source_file": "dotfiles/claude/skills/uv-package-manager/SKILL.md", "rationale": "Fast Python package installer and resolver.", "verification": "unverified"}], "edges": [], "hyperedges": []}

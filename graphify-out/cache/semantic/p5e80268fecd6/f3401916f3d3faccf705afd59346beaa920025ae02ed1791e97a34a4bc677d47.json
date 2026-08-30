@@ -1,0 +1,1 @@
+{"nodes": [{"id": "cmi_problematic_internet_use", "label": "CMI - Problematic Internet Use (2024)", "file_type": "concept", "source_file": "dotfiles/claude/skills/kaggle-learner/references/knowledge/.archive/tabular.md", "rationale": "Tabular competition predicting severity of problematic internet use in children."}], "edges": [], "hyperedges": []}

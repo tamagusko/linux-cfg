@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_scientific_writing_editor", "label": "Scientific Writing Editor", "file_type": "agent", "source_file": "dotfiles/claude/agents/scientific-writing-editor.md", "rationale": "Revises academic text using structural frameworks like PASTOR and CLEAR for Q1 journal standards."}], "edges": [], "hyperedges": []}

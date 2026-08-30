@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_timesfm_forecasting_references_data_preparation", "label": "TimesFM Data Preparation", "file_type": "document", "source_file": "dotfiles/claude/skills/timesfm-forecasting/references/data_preparation.md", "rationale": "Guide for formatting input data, handling NaNs, and preparing covariates for TimesFM."}], "edges": [], "hyperedges": []}

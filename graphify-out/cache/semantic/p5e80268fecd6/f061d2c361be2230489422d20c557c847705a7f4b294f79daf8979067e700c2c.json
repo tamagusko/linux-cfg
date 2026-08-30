@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_torch_geometric_skill", "label": "PyTorch Geometric (PyG) Skill", "file_type": "document", "source_file": "dotfiles/claude/skills/torch-geometric/SKILL.md", "rationale": "Comprehensive guide for building Graph Neural Networks with PyG."}], "edges": [], "hyperedges": []}

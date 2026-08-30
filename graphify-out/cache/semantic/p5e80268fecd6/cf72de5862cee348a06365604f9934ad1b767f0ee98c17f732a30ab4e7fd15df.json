@@ -1,0 +1,1 @@
+{"nodes": [{"id": "ffuf_request_templates", "label": "Authenticated Request Templates", "file_type": "document", "source_file": "dotfiles/claude/skills/ffuf-claude-skill/ffuf-skill/resources/REQUEST_TEMPLATES.md", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null, "rationale": null}], "edges": [], "hyperedges": []}

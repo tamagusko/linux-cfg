@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_doc_coauthoring_skill", "label": "Doc Co-Authoring", "file_type": "document", "source_file": "dotfiles/claude/skills/doc-coauthoring/SKILL.md", "rationale": "Structured workflow for collaborative document creation, including context gathering and reader testing."}], "edges": [], "hyperedges": []}

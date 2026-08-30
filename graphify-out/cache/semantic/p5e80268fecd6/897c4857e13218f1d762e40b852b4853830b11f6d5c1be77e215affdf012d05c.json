@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_tenure_application_optimizer", "label": "Tenure Application Optimizer", "file_type": "agent", "source_file": "dotfiles/claude/agents/tenure-application-optimizer.md", "rationale": "Refines academic application materials for faculty positions."}], "edges": [], "hyperedges": []}

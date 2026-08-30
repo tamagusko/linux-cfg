@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_literature_review_assistant", "label": "Literature Review Assistant", "file_type": "agent", "source_file": "dotfiles/claude/agents/literature-review-assistant.md", "rationale": "Specializes in systematic literature reviews following PRISMA guidelines."}], "edges": [], "hyperedges": []}

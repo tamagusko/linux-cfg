@@ -36,6 +36,8 @@ Then reboot — the NVIDIA driver and the cedilla input modules both need it.
 | `./scripts/check-i3-config.sh` | Static-check `dotfiles/i3/config` before reloading i3 |
 | `./scripts/check-repo-hygiene.sh` | Audit this repo for credentials and stray state |
 | `./scripts/export-claude-config.sh` | Re-export `~/.claude` into `dotfiles/claude/` |
+| `./scripts/setup-jupyter-desktop.sh` | Make double-clicking a `.ipynb` open it in the right uv environment |
+| `./scripts/setup-jupyter-desktop.sh --project .` | Point another repo at that flow |
 
 Runs are logged to `~/.local/state/linux-cfg/install-<timestamp>.log`.
 
@@ -83,6 +85,16 @@ packages, dotfiles after the apps they configure, the firewall last.
 - **`dotfiles/<pkg>` is symlinked to `~/.config/<pkg>`**, so it is not a
   boundary: whatever an app writes there is already in the working tree of a
   public repo. A pre-commit hook scans staged content for credentials.
+- **Double-clicking a notebook works, and picks the project's environment.**
+  One global JupyterLab (`uv tool install`), one `--user` kernel per project, and
+  a launcher that walks up from the file to the nearest `pyproject.toml`. A
+  notebook outside any project still opens, on the global environment. If a
+  server already covers the file, it is reused rather than duplicated. Diagnose a
+  failed double-click at `~/.local/state/notebook-launcher/launcher.log`.
+  One trap worth remembering: `xdg-mime query filetype x.ipynb` answers
+  `application/json`, because it stops at the parent type. GIO — what Thunar
+  actually uses — answers `application/x-ipynb+json`. Check associations with
+  `gio mime`, not `xdg-mime`.
 
 Why anything is done a particular way is commented next to the code that does
 it, not here.

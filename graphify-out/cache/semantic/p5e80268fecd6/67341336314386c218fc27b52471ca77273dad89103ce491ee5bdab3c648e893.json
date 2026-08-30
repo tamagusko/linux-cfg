@@ -1,0 +1,1 @@
+{"nodes": [{"id": "latex_conference_template_organizer_skill", "label": "LaTeX Conference Template Organizer Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/latex-conference-template-organizer/SKILL.md", "rationale": "Skill for organizing messy conference LaTeX templates into Overleaf-ready structures."}], "edges": [], "hyperedges": []}

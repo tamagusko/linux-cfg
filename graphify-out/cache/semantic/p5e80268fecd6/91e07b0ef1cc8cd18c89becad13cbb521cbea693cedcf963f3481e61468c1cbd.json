@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_index_repo_index_repo", "label": "/sc:index-repo", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/index-repo.md", "rationale": "Creates repository index for token reduction."}], "edges": [], "hyperedges": []}

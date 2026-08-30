@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_mcp_integration_references_server_types", "label": "MCP Server Types Deep Dive", "file_type": "document", "source_file": "dotfiles/claude/skills/mcp-integration/references/server-types.md", "rationale": "Reference for stdio, SSE, HTTP, and WebSocket MCP server configurations."}], "edges": [], "hyperedges": []}

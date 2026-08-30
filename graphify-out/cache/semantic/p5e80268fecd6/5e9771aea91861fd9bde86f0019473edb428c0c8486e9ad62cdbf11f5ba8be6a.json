@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_shap_references_explainers_treeexplainer", "label": "SHAP TreeExplainer", "file_type": "document", "source_file": "dotfiles/claude/skills/shap/references/explainers.md", "rationale": "Fast and exact SHAP computation for tree-based models."}], "edges": [], "hyperedges": []}

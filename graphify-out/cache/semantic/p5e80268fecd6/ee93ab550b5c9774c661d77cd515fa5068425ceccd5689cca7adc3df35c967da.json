@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_explain_explain", "label": "/sc:explain", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/explain.md", "rationale": "Provides clear explanations of code, concepts, and system behavior."}], "edges": [], "hyperedges": []}

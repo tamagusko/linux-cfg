@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_recommend_recommend", "label": "/sc:recommend", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/recommend.md", "rationale": "Intelligent command recommendation engine."}], "edges": [], "hyperedges": []}

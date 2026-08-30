@@ -1,0 +1,1 @@
+{"nodes": [{"id": "crossref_crossref", "label": "Crossref", "file_type": "document", "source_file": "dotfiles/claude/skills/paper-lookup/references/crossref.md", "rationale": "DOI registration agency providing metadata for 150M+ works."}], "edges": [], "hyperedges": []}

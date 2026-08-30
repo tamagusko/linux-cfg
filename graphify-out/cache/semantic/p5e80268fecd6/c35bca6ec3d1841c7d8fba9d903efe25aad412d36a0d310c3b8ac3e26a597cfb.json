@@ -1,0 +1,1 @@
+{"nodes": [{"id": "docs_specs_vocabulary_readme", "label": "Spec-Record Vocabulary", "file_type": "document", "source_file": "dotfiles/claude/skills/img2threejs/docs/specs/vocabulary/README.md", "rationale": "Defines the normalized schema for specification records used in local search."}], "edges": [], "hyperedges": []}

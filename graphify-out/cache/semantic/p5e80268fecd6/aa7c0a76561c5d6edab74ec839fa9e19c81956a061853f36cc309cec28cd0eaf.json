@@ -1,0 +1,1 @@
+{"nodes": [{"id": "llava_model", "label": "LLaVA", "file_type": "concept", "source_file": "dotfiles/claude/skills/llava/SKILL.md", "rationale": "Large Language and Vision Assistant for multimodal image-based conversations."}], "edges": [], "hyperedges": []}

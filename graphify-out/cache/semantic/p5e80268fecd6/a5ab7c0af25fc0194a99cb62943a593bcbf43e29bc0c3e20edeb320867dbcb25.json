@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_hook_development_references_advanced", "label": "Advanced Hook Use Cases", "file_type": "document", "source_file": "dotfiles/claude/skills/hook-development/references/advanced.md", "rationale": "Covers sophisticated automation workflows like multi-stage validation and cross-event state sharing."}], "edges": [], "hyperedges": []}

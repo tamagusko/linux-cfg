@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_hook_development_references_migration", "label": "Hook Migration Guide", "file_type": "document", "source_file": "dotfiles/claude/skills/hook-development/references/migration.md", "rationale": "Guidance for transitioning from basic command hooks to advanced prompt-based hooks."}], "edges": [], "hyperedges": []}

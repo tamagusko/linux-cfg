@@ -1,0 +1,1 @@
+{"nodes": [{"id": "competing_risks_analysis", "label": "Competing Risks Analysis", "file_type": "concept", "source_file": "dotfiles/claude/skills/scikit-survival/references/competing-risks.md", "rationale": "Used when subjects can experience mutually exclusive event types."}], "edges": [], "hyperedges": []}

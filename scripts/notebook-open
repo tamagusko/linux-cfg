@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+"""Open a .ipynb from the file manager in the right Jupyter environment.
+
+Called by notebook-open.desktop on double-click. Three cases, all deliberate:
+
+1. The notebook sits inside a uv project (nearest ancestor with pyproject.toml
+   or .venv) -> serve from that project root.
+2. The notebook sits outside any project -> serve from its own directory using
+   the globally installed JupyterLab (uv tool install jupyterlab).
+3. A live server already covers the notebook -> reuse it, open a browser tab,
+   start nothing.
+
+Every path is logged; every failure is also surfaced with notify-send, because
+a double-click that silently does nothing is a defect.
+
+Stdlib only, on purpose: this must never depend on a project's environment.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+from urllib.parse import quote
+
+LOG_DIR = Path.home() / ".local" / "state" / "notebook-launcher"
+LOG_FILE = LOG_DIR / "launcher.log"
+PROJECT_MARKERS = ("pyproject.toml", ".venv")
+
+
+def log(message: str) -> None:
+    """Append a timestamped line to the launcher log, best effort."""
+    try:
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        with LOG_FILE.open("a", encoding="utf-8") as handle:
+            handle.write(f"{stamp}  {message}\n")
+    except OSError:
+        pass  # logging must never be the thing that breaks the launch
+
+
+def notify(summary: str, body: str = "", urgency: str = "normal") -> None:
+    """Show a desktop notification, if the desktop provides one."""
+    if not shutil.which("notify-send"):
+        return
+    try:
+        subprocess.run(
+            ["notify-send", "-a", "Jupyter", "-u", urgency, summary, body],
+            check=False,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def die(summary: str, body: str) -> None:
+    """Report a fatal problem to the log, the desktop and stderr, then exit."""
+    log(f"ERROR {summary}: {body}")
+    notify(summary, f"{body}\n\nLog: {LOG_FILE}", urgency="critical")
+    print(f"{summary}: {body}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def find_project_root(notebook: Path) -> tuple[Path, bool]:
+    """Return (root, is_project) for the nearest enclosing uv project.
+
+    Walks up from the notebook's directory. Falls back to the notebook's own
+    directory so an orphan notebook still opens instead of failing.
+    """
+    for candidate in [notebook.parent, *notebook.parent.parents]:
+        if any((candidate / marker).exists() for marker in PROJECT_MARKERS):
+            return candidate, True
+    return notebook.parent, False
+
+
+def runtime_dirs() -> list[Path]:
+    """Candidate Jupyter runtime directories, without paying for a subprocess.
+
+    Mirrors jupyter_core's resolution order on Linux. Both are checked because
+    XDG_RUNTIME_DIR is not always set (bare X11 sessions, some login managers).
+    """
+    dirs = []
+    xdg = os.environ.get("XDG_RUNTIME_DIR")
+    if xdg:
+        dirs.append(Path(xdg) / "jupyter")
+    dirs.append(Path.home() / ".local" / "share" / "jupyter" / "runtime")
+    return dirs
+
+
+def pid_alive(pid: int) -> bool:
+    """True if a process with this pid exists and we may signal it."""
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True  # exists, owned by someone else
+    return True
+
+
+def find_live_server(notebook: Path) -> tuple[dict, Path] | None:
+    """Find a running server whose root_dir contains the notebook.
+
+    Returns the most specific match (deepest root_dir), so a project server is
+    preferred over a broader one rooted higher up.
+    """
+    matches: list[tuple[dict, Path]] = []
+    for directory in runtime_dirs():
+        if not directory.is_dir():
+            continue
+        for path in directory.glob("jpserver-*.json"):
+            try:
+                info = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            pid, root = info.get("pid"), info.get("root_dir")
+            if not (pid and root and info.get("url")):
+                continue
+            if not pid_alive(int(pid)):
+                log(f"stale runtime file (pid {pid} gone): {path.name}")
+                continue
+            root_path = Path(root).resolve()
+            if root_path == notebook.parent or root_path in notebook.parents:
+                matches.append((info, root_path))
+    if not matches:
+        return None
+    return max(matches, key=lambda pair: len(pair[1].parts))
+
+
+def open_in_browser(info: dict, root: Path, notebook: Path) -> None:
+    """Open an existing server's Lab UI at this notebook."""
+    relative = notebook.relative_to(root)
+    url = f"{info['url'].rstrip('/')}/lab/tree/{quote(str(relative))}"
+    if info.get("token"):
+        url += f"?token={info['token']}"
+    log(f"reusing server pid={info.get('pid')} root={root} -> {notebook.name}")
+    try:
+        subprocess.Popen(
+            ["xdg-open", url],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except OSError as exc:
+        die("Could not open browser", f"xdg-open failed: {exc}")
+
+
+def start_server(root: Path, notebook: Path, is_project: bool) -> None:
+    """Start a detached JupyterLab rooted at `root`, opening `notebook`."""
+    # `uv tool install jupyterlab` exposes `jupyter-lab`, not the `jupyter`
+    # dispatcher (that entry point belongs to jupyter-core, a dependency).
+    # Prefer the direct executable and fall back to the dispatcher form.
+    jupyter_lab = shutil.which("jupyter-lab")
+    dispatcher = shutil.which("jupyter")
+    if jupyter_lab is not None:
+        command = [jupyter_lab]
+    elif dispatcher is not None:
+        command = [dispatcher, "lab"]
+    else:
+        die(
+            "Jupyter is not installed",
+            "Install it with:\n"
+            "  uv tool install --python 3.13 --with ipykernel jupyterlab",
+        )
+
+    kind = "project" if is_project else "fallback (no project found)"
+    log(f"starting server: root={root} [{kind}] notebook={notebook.name}")
+    notify("Starting Jupyter…", f"{notebook.name}\n{root}")
+
+    command += [f"--notebook-dir={root}", str(notebook)]
+    try:
+        with LOG_FILE.open("a", encoding="utf-8") as handle:
+            subprocess.Popen(
+                command,
+                cwd=str(root),
+                stdout=handle,
+                stderr=subprocess.STDOUT,
+                stdin=subprocess.DEVNULL,
+                start_new_session=True,  # survive the file manager going away
+            )
+    except OSError as exc:
+        die("Could not start Jupyter", f"{exc}\nCommand: {' '.join(command)}")
+
+
+def main(argv: list[str]) -> int:
+    if len(argv) != 2:
+        die("notebook-open: bad invocation", f"expected one path, got {len(argv) - 1}")
+
+    notebook = Path(argv[1]).expanduser().resolve()
+    if not notebook.is_file():
+        die("Notebook not found", str(notebook))
+
+    log(f"--- open {notebook}")
+    root, is_project = find_project_root(notebook)
+
+    existing = find_live_server(notebook)
+    if existing is not None:
+        open_in_browser(existing[0], existing[1], notebook)
+    else:
+        start_server(root, notebook, is_project)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv))
+    except SystemExit:
+        raise
+    except Exception as exc:  # last resort: never fail silently
+        die("notebook-open crashed", f"{type(exc).__name__}: {exc}")

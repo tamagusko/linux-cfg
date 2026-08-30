@@ -1,0 +1,1 @@
+{"nodes": [{"id": "command_development_skill", "label": "Command Development Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/command-development/SKILL.md", "rationale": "Guidance on creating Claude Code slash commands, including frontmatter and dynamic arguments."}], "edges": [], "hyperedges": []}

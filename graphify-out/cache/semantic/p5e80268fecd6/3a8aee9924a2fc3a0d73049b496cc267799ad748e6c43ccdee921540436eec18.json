@@ -1,0 +1,1 @@
+{"nodes": [{"id": "amp_parkinsons_2023_competition", "label": "AMP-Parkinson's Disease Progression Prediction", "file_type": "concept", "source_file": "dotfiles/claude/skills/kaggle-learner/references/knowledge/tabular/amp-parkinsons-2021.md", "rationale": "Predicting Parkinson's progression using protein and peptide data."}], "edges": [], "hyperedges": []}

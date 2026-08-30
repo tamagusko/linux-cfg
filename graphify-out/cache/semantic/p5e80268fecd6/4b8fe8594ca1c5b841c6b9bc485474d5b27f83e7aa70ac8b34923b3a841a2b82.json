@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_kegg_kegg", "label": "KEGG API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/kegg.md", "rationale": "Reference for biological pathways and genomes."}], "edges": [], "hyperedges": []}

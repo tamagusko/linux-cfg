@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_task_task", "label": "/sc:task", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/task.md", "rationale": "Executes complex tasks with workflow management."}], "edges": [], "hyperedges": []}

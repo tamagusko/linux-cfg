@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_brandkit_skill", "label": "Brandkit Image Generation Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/brandkit/SKILL.md", "rationale": "Art direction and visual system strategy for premium brand-kit generation."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_img2threejs_skill", "label": "img2threejs Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/img2threejs/SKILL.md", "rationale": "Canonical source for the img2threejs skill, defining the staged sculpting pipeline for 3D reconstruction from images."}], "edges": [], "hyperedges": []}

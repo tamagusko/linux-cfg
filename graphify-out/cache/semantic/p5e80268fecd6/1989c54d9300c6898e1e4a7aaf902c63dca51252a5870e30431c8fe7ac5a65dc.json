@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_ncbi_gene_ncbi_gene", "label": "NCBI Gene API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/ncbi-gene.md", "rationale": "Reference for gene-specific metadata via E-utilities."}], "edges": [], "hyperedges": []}

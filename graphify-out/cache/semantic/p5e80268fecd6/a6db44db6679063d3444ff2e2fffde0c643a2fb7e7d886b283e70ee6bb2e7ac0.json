@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_hook_development_references_patterns", "label": "Common Hook Patterns", "file_type": "document", "source_file": "dotfiles/claude/skills/hook-development/references/patterns.md", "rationale": "Proven patterns for security, test enforcement, and context loading."}], "edges": [], "hyperedges": []}

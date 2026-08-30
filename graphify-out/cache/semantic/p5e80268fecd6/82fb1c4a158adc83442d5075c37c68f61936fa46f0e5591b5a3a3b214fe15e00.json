@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_human_protein_atlas_hpa", "label": "Human Protein Atlas API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/human-protein-atlas.md", "rationale": "Reference for protein expression in tissues and cells."}], "edges": [], "hyperedges": []}

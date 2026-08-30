@@ -1,0 +1,1 @@
+{"nodes": [{"id": "pubmed_pubmed", "label": "PubMed", "file_type": "document", "source_file": "dotfiles/claude/skills/paper-lookup/references/pubmed.md", "rationale": "Provides citations, abstracts, and metadata for 37M+ articles; does not contain full text."}], "edges": [], "hyperedges": []}

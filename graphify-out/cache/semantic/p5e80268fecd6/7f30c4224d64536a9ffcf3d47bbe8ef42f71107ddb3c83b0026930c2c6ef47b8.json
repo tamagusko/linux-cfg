@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_lincs_l1000_lincs", "label": "LINCS L1000 API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/lincs-l1000.md", "rationale": "Reference for cellular responses to perturbations."}], "edges": [], "hyperedges": []}

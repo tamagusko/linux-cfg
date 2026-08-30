@@ -1,0 +1,1 @@
+{"nodes": [{"id": "metadata_extraction_guide", "label": "Metadata Extraction Guide", "file_type": "document", "source_file": "dotfiles/claude/skills/citation-management/references/metadata_extraction.md", "rationale": "Guide to extracting citation metadata from DOIs, PMIDs, arXiv IDs, and URLs."}], "edges": [], "hyperedges": []}

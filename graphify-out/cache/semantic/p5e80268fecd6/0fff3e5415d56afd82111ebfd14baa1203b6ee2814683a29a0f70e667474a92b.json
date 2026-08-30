@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_hooks", "label": "Hooks Management", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/hooks.md", "rationale": "Manages the design detector hook for real-time feedback during editing."}], "edges": [], "hyperedges": []}

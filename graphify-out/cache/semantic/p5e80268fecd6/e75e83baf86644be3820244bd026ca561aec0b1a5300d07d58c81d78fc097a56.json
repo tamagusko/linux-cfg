@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_dbsnp_dbsnp", "label": "dbSNP API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/dbsnp.md", "rationale": "Reference for short genetic variations."}], "edges": [], "hyperedges": []}

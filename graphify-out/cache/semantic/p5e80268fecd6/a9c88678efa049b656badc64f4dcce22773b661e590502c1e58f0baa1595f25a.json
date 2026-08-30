@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_blip_2_skill", "label": "BLIP-2: Vision-Language Pre-training", "file_type": "code", "source_file": "dotfiles/claude/skills/blip-2/SKILL.md", "rationale": "Guide for using BLIP-2 for multimodal tasks like captioning and VQA."}], "edges": [], "hyperedges": []}

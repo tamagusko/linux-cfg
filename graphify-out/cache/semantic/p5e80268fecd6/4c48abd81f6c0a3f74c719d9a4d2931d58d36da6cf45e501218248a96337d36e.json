@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_networkx_skill", "label": "NetworkX Skill Overview", "file_type": "document", "source_file": "dotfiles/claude/skills/networkx/SKILL.md", "rationale": "Toolkit for network analysis and graph algorithms in Python."}], "edges": [], "hyperedges": []}

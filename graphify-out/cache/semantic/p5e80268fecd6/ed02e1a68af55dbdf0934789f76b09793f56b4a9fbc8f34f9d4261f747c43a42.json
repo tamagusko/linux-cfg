@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_help_help", "label": "/sc:help", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/help.md", "rationale": "Lists all available /sc commands and framework flags."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_distill", "label": "Distill Command", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/distill.md", "rationale": "Guidelines for removing complexity and visual noise."}], "edges": [], "hyperedges": []}

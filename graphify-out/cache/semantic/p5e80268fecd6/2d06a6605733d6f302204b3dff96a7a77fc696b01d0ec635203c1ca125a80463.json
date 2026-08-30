@@ -1,0 +1,1 @@
+{"nodes": [{"id": "clip_skill", "label": "CLIP Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/clip/SKILL.md", "rationale": "OpenAI's model connecting vision and language for zero-shot classification and retrieval."}], "edges": [], "hyperedges": []}

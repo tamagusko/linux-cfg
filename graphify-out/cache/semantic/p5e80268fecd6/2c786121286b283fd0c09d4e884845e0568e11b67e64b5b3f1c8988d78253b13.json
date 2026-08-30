@@ -1,0 +1,1 @@
+{"nodes": [{"id": "grimoire_readiness_procedural_rigging_contract", "label": "Procedural Rigging Contract", "file_type": "document", "source_file": "dotfiles/claude/skills/img2threejs/grimoire/readiness/procedural_rigging_contract.md", "rationale": "Implementation-facing contract for rig payloads and runtime invariants."}], "edges": [], "hyperedges": []}

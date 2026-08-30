@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_index_index", "label": "/sc:index", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/index.md", "rationale": "Generates project documentation and knowledge base."}], "edges": [], "hyperedges": []}

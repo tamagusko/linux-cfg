@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_get_available_resources_detect_resources", "label": "detect_resources.py", "file_type": "code", "source_file": "dotfiles/claude/skills/get-available-resources/SKILL.md", "rationale": "Detects CPU, GPU, memory, and disk resources."}], "edges": [], "hyperedges": []}

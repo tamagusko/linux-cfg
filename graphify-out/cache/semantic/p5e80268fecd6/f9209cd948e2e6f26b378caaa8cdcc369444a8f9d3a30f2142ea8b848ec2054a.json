@@ -1,0 +1,1 @@
+{"nodes": [{"id": "citation_verification_skill", "label": "Citation Verification Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/citation-verification/SKILL.md", "rationale": "Core skill for proactive citation verification using WebSearch and Google Scholar."}], "edges": [], "hyperedges": []}

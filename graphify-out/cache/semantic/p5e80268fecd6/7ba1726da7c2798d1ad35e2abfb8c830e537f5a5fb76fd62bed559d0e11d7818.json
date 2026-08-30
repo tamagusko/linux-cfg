@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_imagegen_frontend_mobile_skill", "label": "Mobile Image Generation Skill", "file_type": "document", "source_file": "dotfiles/claude/skills/imagegen-frontend-mobile/SKILL.md", "rationale": "Art direction for premium mobile app screen concepts and flows."}], "edges": [], "hyperedges": []}

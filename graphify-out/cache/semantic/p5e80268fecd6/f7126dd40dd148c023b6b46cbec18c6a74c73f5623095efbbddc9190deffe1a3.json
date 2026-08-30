@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_google_flights_flight_search", "label": "Google Flights Search", "file_type": "concept", "source_file": "dotfiles/claude/skills/google-flights/SKILL.md", "rationale": "Browser automation for finding flight prices and schedules."}], "edges": [], "hyperedges": []}

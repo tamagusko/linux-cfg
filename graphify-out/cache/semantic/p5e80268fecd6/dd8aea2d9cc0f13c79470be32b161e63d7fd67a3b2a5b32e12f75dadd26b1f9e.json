@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_daily_coding_skill", "label": "Daily Coding Skill", "file_type": "code", "source_file": "dotfiles/claude/skills/daily-coding/SKILL.md", "rationale": "Minimal QA checklist for source code modifications."}], "edges": [], "hyperedges": []}

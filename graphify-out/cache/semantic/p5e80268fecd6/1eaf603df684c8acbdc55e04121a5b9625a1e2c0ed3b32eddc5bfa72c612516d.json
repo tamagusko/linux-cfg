@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_refactor_cleaner", "label": "Refactor & Cleaner Agent", "file_type": "agent", "source_file": "dotfiles/claude/agents/refactor-cleaner.md", "rationale": "Expert in dead code cleanup, consolidation, and dependency management using tools like vulture and ruff."}], "edges": [], "hyperedges": []}

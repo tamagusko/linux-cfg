@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_ui_sketcher", "label": "UI Sketcher", "file_type": "agent", "source_file": "dotfiles/claude/agents/ui-sketcher.md", "rationale": "Transforms functional requirements into visual ASCII interface designs and interaction specs."}], "edges": [], "hyperedges": []}

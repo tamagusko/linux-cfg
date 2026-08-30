@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_transformers_references_generation", "label": "Transformers Text Generation", "file_type": "document", "source_file": "dotfiles/claude/skills/transformers/references/generation.md", "rationale": "Detailed reference for text generation strategies and parameters in the transformers library."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_clinicaltrials_clinicaltrials", "label": "ClinicalTrials.gov API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/clinicaltrials.md", "rationale": "Reference for clinical study data."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "transformers_tokenizers_autotokenizer", "label": "AutoTokenizer", "file_type": "code", "source_file": "dotfiles/claude/skills/transformers/references/tokenizers.md", "rationale": "Primary interface for loading model-specific tokenizers."}], "edges": [], "hyperedges": []}

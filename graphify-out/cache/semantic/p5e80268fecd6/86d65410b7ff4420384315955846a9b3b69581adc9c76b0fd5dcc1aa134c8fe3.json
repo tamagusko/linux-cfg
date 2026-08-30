@@ -1,0 +1,1 @@
+{"nodes": [{"id": "grimoire_feedback_shading_realism", "label": "Material and Lighting Realism", "file_type": "document", "source_file": "dotfiles/claude/skills/img2threejs/grimoire/feedback/shading_realism.md", "rationale": "PBR realism requirements and common failure patterns in look-dev."}], "edges": [], "hyperedges": []}

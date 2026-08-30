@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_transformers_skill", "label": "Transformers Skill", "file_type": "document", "source_file": "dotfiles/claude/skills/transformers/SKILL.md", "rationale": "Core skill for working with pre-trained transformer models across multiple domains."}], "edges": [], "hyperedges": []}

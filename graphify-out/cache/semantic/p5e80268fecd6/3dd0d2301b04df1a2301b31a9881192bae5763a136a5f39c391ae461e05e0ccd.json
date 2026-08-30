@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_summer_school_finder", "label": "Summer School Finder", "file_type": "agent", "source_file": "dotfiles/claude/agents/summer-school-finder.md", "rationale": "Identifies training opportunities and workshops to boost academic CVs."}], "edges": [], "hyperedges": []}

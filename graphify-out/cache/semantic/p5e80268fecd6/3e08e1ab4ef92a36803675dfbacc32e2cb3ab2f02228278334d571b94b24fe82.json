@@ -1,0 +1,1 @@
+{"nodes": [{"id": "color_palettes_okabe_ito", "label": "Okabe-Ito Palette", "file_type": "concept", "source_file": "dotfiles/claude/skills/scientific-visualization/references/color_palettes.md", "rationale": "Recommended colorblind-friendly palette distinguishable by all types of color blindness."}], "edges": [], "hyperedges": []}

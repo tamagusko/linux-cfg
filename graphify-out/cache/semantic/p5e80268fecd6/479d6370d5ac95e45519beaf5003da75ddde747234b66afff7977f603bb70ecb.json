@@ -1,0 +1,1 @@
+{"nodes": [{"id": "img_background_arch", "label": "Arch Linux Logo Wallpaper", "file_type": "image", "source_file": "img/background_arch.png"}], "edges": [{"source": "img_background_arch", "target": "pacman_packages", "relation": "references", "confidence": "INFERRED", "confidence_score": 0.6, "source_file": "img/background_arch.png"}], "hyperedges": []}

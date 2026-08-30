@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_research_project_manager", "label": "Research Project Manager", "file_type": "agent", "source_file": "dotfiles/claude/agents/research-project-manager.md", "rationale": "Handles planning, timeline management, and reproducibility workflows for academic research teams."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_database_lookup_references_cosmic_cosmic", "label": "COSMIC API", "file_type": "document", "source_file": "dotfiles/claude/skills/database-lookup/references/cosmic.md", "rationale": "Reference for somatic mutations in cancer."}], "edges": [], "hyperedges": []}

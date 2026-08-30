@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_commands_sc_troubleshoot_troubleshoot", "label": "/sc:troubleshoot", "file_type": "code", "source_file": "dotfiles/claude/commands/sc/troubleshoot.md", "rationale": "Diagnoses and resolves system issues."}], "edges": [], "hyperedges": []}

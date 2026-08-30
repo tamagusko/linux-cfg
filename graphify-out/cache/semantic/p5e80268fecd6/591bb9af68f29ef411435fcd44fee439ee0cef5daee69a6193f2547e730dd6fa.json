@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_mcp_integration_references_authentication", "label": "MCP Authentication Patterns", "file_type": "document", "source_file": "dotfiles/claude/skills/mcp-integration/references/authentication.md", "rationale": "Details OAuth, token-based, and environment variable authentication for MCP."}], "edges": [], "hyperedges": []}

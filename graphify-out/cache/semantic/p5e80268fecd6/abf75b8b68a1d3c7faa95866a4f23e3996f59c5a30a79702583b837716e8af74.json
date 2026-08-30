@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_agents_story_generator", "label": "Story Generator", "file_type": "agent", "source_file": "dotfiles/claude/agents/story-generator.md", "rationale": "Translates requirements and code changes into structured user stories with GWT acceptance criteria."}], "edges": [], "hyperedges": []}

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "grimoire_feedback_render_capture", "label": "Browser Screenshot Feedback", "file_type": "document", "source_file": "dotfiles/claude/skills/img2threejs/grimoire/feedback/render_capture.md", "rationale": "Deterministic viewer rules and framing match requirements for review."}], "edges": [], "hyperedges": []}

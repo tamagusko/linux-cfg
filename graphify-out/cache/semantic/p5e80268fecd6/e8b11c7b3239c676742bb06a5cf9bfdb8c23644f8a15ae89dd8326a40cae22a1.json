@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_impeccable_reference_audit", "label": "Web Audit Reference", "file_type": "document", "source_file": "dotfiles/claude/skills/impeccable/reference/audit.md", "rationale": "Technical quality checks for web implementations (A11y, Perf, Theming, Responsive)."}], "edges": [], "hyperedges": []}

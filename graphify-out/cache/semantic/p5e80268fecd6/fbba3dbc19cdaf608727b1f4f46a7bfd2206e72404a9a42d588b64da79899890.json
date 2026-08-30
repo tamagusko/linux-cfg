@@ -1,0 +1,1 @@
+{"nodes": [{"id": "dotfiles_claude_skills_design_taste_frontend_v1_skill", "label": "Design Taste Frontend (v1)", "file_type": "document", "source_file": "dotfiles/claude/skills/design-taste-frontend-v1/SKILL.md", "rationale": "Legacy version of the frontend design skill, preserved for backward compatibility."}], "edges": [], "hyperedges": []}

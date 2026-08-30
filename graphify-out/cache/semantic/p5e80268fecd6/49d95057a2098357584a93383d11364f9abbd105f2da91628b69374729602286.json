@@ -1,0 +1,1 @@
+{"nodes": [{"id": "forge_stage5_rig_notes", "label": "Rig Milestone 0 Findings", "file_type": "document", "source_file": "dotfiles/claude/skills/img2threejs/forge/stage5_rig/NOTES.md", "rationale": "Technical investigation into THREE.CapsuleGeometry defects and watertight mesh construction."}], "edges": [], "hyperedges": []}
