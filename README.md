@@ -57,7 +57,7 @@ in without renumbering the rest.
 | `70-dotfiles` | oh-my-zsh, powerlevel10k, `.zshrc`, symlinks into `~/.config` |
 | `75-claude` | Claude Code CLI, nodejs for its hooks, `~/.claude` from `dotfiles/claude` |
 | `80-security` | Firewall, ssh client hardening, fstrim, mirrors |
-| `90-maintenance` | btrfs snapshots, zram, pacman cache cleanup |
+| `90-maintenance` | btrfs snapshots, zram, wifi power-save off (rtw89 latency), pacman cache cleanup |
 
 Order matters: the GPU driver before anything that needs it, paru before the AUR
 packages, dotfiles after the apps they configure, the firewall last.

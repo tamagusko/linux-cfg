@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stage 90 — snapshots, memory tuning, and maintenance hooks.
+# Stage 90 — snapshots, memory tuning, wifi power save, and maintenance hooks.
 # shellcheck source=lib/common.sh
 source "$(dirname "${BASH_SOURCE[0]}")/../lib/common.sh"
 
@@ -85,6 +85,35 @@ else
         'vm.page-cluster = 0' \
         | sudo tee /etc/sysctl.d/99-vm-zram.conf >/dev/null
     ok "wrote /etc/sysctl.d/99-vm-zram.conf"
+fi
+
+# ----------------------------------------------------------- wifi power save
+#
+# NetworkManager leaves the driver's power save on by default, and on the rtw89
+# cards (RTL8852CE here) that means the NIC dozes between beacons and every
+# inbound packet waits for the next wake-up. Measured on this machine, one hop
+# to the router at -43 dBm: p50 21 ms / p90 182 ms / max 415 ms with power
+# save on, p50 4 ms / p90 7.5 ms with it off. Nothing else was wrong — not
+# bluetooth coexistence, not channel congestion — so the symptom looks like a
+# flaky router or an interfering headset and gets misdiagnosed as either.
+#
+# A conf.d drop-in rather than a per-SSID nmcli tweak so it holds for any
+# network, not just the one that happened to be configured at install time.
+# Profiles that set powersave explicitly still win over this default.
+if have NetworkManager || have nmcli; then
+    if [[ "$DRY_RUN" == "1" ]]; then
+        info "would write /etc/NetworkManager/conf.d/wifi-powersave.conf"
+    else
+        printf '%s\n' \
+            '# linux-cfg: rtw89 dozes between beacons with power save on; see stage 90.' \
+            '[connection]' \
+            'wifi.powersave = 2' \
+            | sudo tee /etc/NetworkManager/conf.d/wifi-powersave.conf >/dev/null
+        run sudo systemctl reload NetworkManager
+        ok "wrote /etc/NetworkManager/conf.d/wifi-powersave.conf (wifi power save disabled)"
+    fi
+else
+    info "NetworkManager not present — skipping wifi power save drop-in"
 fi
 
 # ------------------------------------------------------------- package cache
