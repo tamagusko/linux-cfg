@@ -6,7 +6,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "claude-fable-5-1[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -105,7 +105,9 @@
     "frontend-design@claude-code-plugins": true,
     "playground@claude-plugins-official": true,
     "code-review@claude-code-plugins": true,
-    "figma@claude-plugins-official": true
+    "figma@claude-plugins-official": true,
+    "pr-review-toolkit@claude-code-plugins": true,
+    "security-guidance@claude-code-plugins": true
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {
@@ -164,5 +166,6 @@
   "agentPushNotifEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754089766006
-  }
+  },
+  "inputNeededNotifEnabled": true
 }
