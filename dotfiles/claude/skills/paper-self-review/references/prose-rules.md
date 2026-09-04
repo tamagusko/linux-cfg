@@ -48,7 +48,7 @@ The reader and writer are equals looking at the subject; the prose does not poin
 
 The expert cannot remember not knowing. Three checks, each yielding a comment or a one-word edit:
 
-1. Every abbreviation is defined at its first use in the body (abstract and captions count as separate first uses if the venue reads them standalone).
+1. Acronym standard. Each acronym is expanded exactly once, at its first appearance in the body; the abstract does not count, so the body re-expands. Captions and appendices count as body, in document order. The expansion is capitalized word by word: "International Roughness Index (IRI)", never "International roughness index (IRI)" or "international roughness index (IRI)". After that first appearance only the acronym is used, including "Long-Term Pavement Performance" becoming "LTPP" in the data section. Feature and variable labels with an expansion ("Pavement Age (AGE)") follow the same rule. Symbols are not acronyms: "coefficient of determination ($R^2$)" stays lowercase.
 2. Every "this", "it", "the latter", "such" has exactly one plausible antecedent. If two, name the referent.
 3. No term is used before the sentence that defines it. If "the hard layer" appears two paragraphs before its definition, comment; do not move text.
 

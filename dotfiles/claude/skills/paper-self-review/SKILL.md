@@ -34,7 +34,7 @@ The paper is done. This pass corrects and refines the delivery; it never rewrite
 | P1 | The advisor's cut: prefer "to extend to the case of X, we change the metric to Y" over "we need to change". Cut every word that does not strictly need to be there; never claim necessity when describing a choice. Modal padding is the first hunting target. |
 | P1b | Necessity of a requirement argued from evidence is not a claim about a choice; keep it. |
 | P2 | Classic style: prose is a window onto the subject. Cut metadiscourse and remarks about the writing itself. |
-| P3 | Anti-curse-of-knowledge: abbreviations defined at first body use; every "this", "it", "the latter" has one antecedent; no term used before its definition. |
+| P3 | Anti-curse-of-knowledge: each acronym expanded once, at first body appearance (the abstract does not count), expansion capitalized word by word, "International Roughness Index (IRI)", acronym only thereafter; every "this", "it", "the latter" has one antecedent; no term used before its definition. |
 | P4 | Concrete subjects, strong verbs: light verb plus nominalization becomes the verb. |
 | P5 | Given before new; one term per referent across a section, no elegant variation. |
 | P6 | Cut intensifiers and reflexive hedges; hedge only where the uncertainty is real and quantified; no self-praise. |
