@@ -1,6 +1,3 @@
 {
-  "CtrlUnderscore": "lua:comment.comment",
-  "Ctrl-l": "command-edit:goto ",
-  "Ctrl-PageDown": "NextTab",
-  "Ctrl-PageUp": "PreviousTab"
+  "CtrlUnderscore": "lua:comment.comment"
 }
