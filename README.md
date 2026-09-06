@@ -38,6 +38,7 @@ Then reboot — the NVIDIA driver and the cedilla input modules both need it.
 | `./scripts/export-claude-config.sh` | Re-export `~/.claude` into `dotfiles/claude/` |
 | `./scripts/setup-jupyter-desktop.sh` | Make double-clicking a `.ipynb` open it in the right uv environment |
 | `./scripts/setup-jupyter-desktop.sh --project .` | Point another repo at that flow |
+| `./scripts/setup-micro-desktop.sh` | Open `.txt`, `.py`, `.json`, `.yaml` and `.conf` in micro inside kitty on double-click |
 
 Runs are logged to `~/.local/state/linux-cfg/install-<timestamp>.log`.
 

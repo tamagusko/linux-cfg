@@ -1,0 +1,20 @@
+{
+  "colorscheme": "dracula-tc",
+  "tabstospaces": true,
+  "tabsize": 4,
+  "softwrap": true,
+  "wordwrap": true,
+  "scrollbar": true,
+  "diffgutter": true,
+  "hlsearch": true,
+  "hltrailingws": true,
+  "savecursor": true,
+  "*.json": { "tabsize": 2 },
+  "*.js":   { "tabsize": 2, "softwrap": false },
+  "*.xml":  { "tabsize": 2 },
+  "*.yaml": { "tabsize": 2 },
+  "*.yml":  { "tabsize": 2 },
+  "*.html": { "tabsize": 2 },
+  "*.css":  { "tabsize": 2 },
+  "*.py":   { "softwrap": false }
+}

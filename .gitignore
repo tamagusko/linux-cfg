@@ -61,3 +61,10 @@ dotfiles/claude/skills/systematic-debugging
 # one writes __pycache__ straight into dotfiles/, which is inside the tree.
 __pycache__/
 *.pyc
+
+# micro writes its own state next to its config: buffers/ (cursor/history),
+# backups/ and plug/ (downloaded plugins). ~/.config/micro is linked into
+# this repo, so those land in the tree; they are state, not config.
+dotfiles/micro/buffers/
+dotfiles/micro/backups/
+dotfiles/micro/plug/
