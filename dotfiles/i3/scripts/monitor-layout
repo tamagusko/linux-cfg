@@ -3,18 +3,20 @@
 # Physical monitor arrangement — where each screen sits in the X coordinate
 # space, which is what decides where the pointer crosses between them.
 #
-#          ┌──────────────┐ ┌────┐
-#          │              │ │    │
-#          │    DP-5      │ │DP-2│   rotated, right of the main screen
-#          │    main      │ │    │
-#          └──────────────┘ └────┘
-#          ┌────────┐
-#          │ HDMI-0 │   below the main screen
-#          └────────┘
+#          ┌──────────────┐
+#          │     DP-1     │   Dell P2014H, 1600x900, main
+#          └──────────────┘
+#          ┌────────────────┐
+#          │     HDMI-0     │   MSI MP161 E2, 1920x1080, below the main screen
+#          └────────────────┘
 #
 # Pointer behaviour this produces:
-#   main -> right  crosses to the rotated screen
 #   main -> down   crosses to the small screen
+#
+# Two monitors since 2026-09-07, when the big central monitor (DP-5) died. The
+# Dell that used to be the rotated portrait screen on DP-2 now stands in as
+# the landscape main. The three-monitor version of this file is kept in
+# ../layouts/three-monitors/ for when a replacement arrives.
 #
 # This is separate from the workspace assignment in ~/.config/i3/config. That
 # decides which workspace *appears* on which output; this decides where the
@@ -26,16 +28,13 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-MAIN=DP-5      # big central monitor
-VERT=DP-2      # rotated portrait monitor, to the right
-SMALL=HDMI-0   # smaller monitor, below the main one
+MAIN=DP-1      # Dell, landscape, on top
+SMALL=HDMI-0   # MSI, below the main one
 
-# Rotation of the portrait screen. "left" turns it counter-clockwise; use
-# "right" instead if the image comes out upside down.
-VERT_ROTATE=left
-
-# --right-of / --below position relatively, so no resolution is hardcoded here
-# and the layout survives a monitor being swapped for a different size.
+# --below positions relatively, so no resolution is hardcoded here and the
+# layout survives a monitor being swapped for a different size. The two
+# screens are left-aligned; the MSI is 320 px wider than the Dell, so its
+# right edge sticks out with nothing above it.
 
 connected() {
     xrandr --query | awk -v o="$1" '$1 == o && $2 == "connected" { found = 1 } END { exit !found }'
@@ -49,12 +48,6 @@ if ! connected "$MAIN"; then
 fi
 
 args=(--output "$MAIN" --auto --primary --rotate normal)
-
-if connected "$VERT"; then
-    args+=(--output "$VERT" --auto --rotate "$VERT_ROTATE" --right-of "$MAIN")
-else
-    args+=(--output "$VERT" --off)
-fi
 
 if connected "$SMALL"; then
     args+=(--output "$SMALL" --auto --rotate normal --below "$MAIN")

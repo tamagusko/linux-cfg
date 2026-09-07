@@ -257,18 +257,24 @@ set $ws10 "10:"
 # or ./scripts/monitors.sh in this repo, which also prints geometry and
 # rotation so it is obvious which is which.
 #
-# Names verified on this machine 2026-08-19. If the hardware changes, re-run
-# ./scripts/monitors.sh and update these three lines.
+# Names verified on this machine 2026-09-07. If the hardware changes, re-run
+# ./scripts/monitors.sh and update these two lines.
 # NOTE: no trailing comments on these lines. i3's `set` takes the entire rest
-# of the line as the value, comment included, so `set $mon_main DP-5  # main`
-# defines $mon_main as "DP-5  # main" and every workspace line built from it
+# of the line as the value, comment included, so `set $mon_main DP-1  # main`
+# defines $mon_main as "DP-1  # main" and every workspace line built from it
 # becomes a parse error.
 #
-#   mon_main   big central monitor
-#   mon_vert   rotated portrait, right, auxiliary
-#   mon_small  smaller monitor below the main one
-set $mon_main DP-5
-set $mon_vert DP-2
+# Two monitors since 2026-09-07, when the big central monitor (DP-5) died. The
+# Dell P2014H that was the rotated portrait screen (DP-2) is now the landscape
+# main on DP-1, and everything that lived on the portrait screen lives on the
+# main. monitors.sh guesses main by pixel area, which would pick the MSI here;
+# the Dell is main because it is the one on top, at eye level. The
+# three-monitor assignment is kept in layouts/three-monitors/ for when a
+# replacement arrives.
+#
+#   mon_main   Dell P2014H, landscape, on top
+#   mon_small  MSI MP161 E2, below the main one
+set $mon_main DP-1
 set $mon_small HDMI-0
 
 # Workspace -> output.
@@ -277,23 +283,22 @@ set $mon_small HDMI-0
 # that exists, so unplugging a monitor relocates its workspaces rather than
 # losing them.
 #
-#   main   big central monitor
-#   vert   rotated portrait monitor on the right, auxiliary
-#   small  smaller monitor below the main one
+#   main   Dell on top
+#   small  MSI below the main one
 
 workspace $ws1  output $mon_small $mon_main
-workspace $ws2  output $mon_main  $mon_vert
-workspace $ws5  output $mon_main  $mon_vert
 
-workspace $ws3  output $mon_vert  $mon_main
-workspace $ws4  output $mon_vert  $mon_main
-workspace $ws6  output $mon_vert  $mon_main
-workspace $ws7  output $mon_vert  $mon_main
-workspace $ws8  output $mon_vert  $mon_main
+workspace $ws2  output $mon_main  $mon_small
+workspace $ws3  output $mon_main  $mon_small
+workspace $ws4  output $mon_main  $mon_small
+workspace $ws5  output $mon_main  $mon_small
+workspace $ws6  output $mon_main  $mon_small
+workspace $ws7  output $mon_main  $mon_small
+workspace $ws8  output $mon_main  $mon_small
 
 # Not requested; default to the main screen.
-workspace $ws9  output $mon_main  $mon_vert
-workspace $ws10 output $mon_main  $mon_vert
+workspace $ws9  output $mon_main  $mon_small
+workspace $ws10 output $mon_main  $mon_small
 
 # Move the focused window to the monitor left/right of the current one.
 # $mod+Shift+Left/Right are already taken by "move left/right" within a layout.
@@ -405,7 +410,7 @@ exec_always --no-startup-id ~/.config/i3/scripts/monitor-layout
 # A system-tray applet, started by ~/.config/autostart/academic-dashboard.desktop
 # (dex runs those). No window rules: there is no window to place, which is the
 # point of a tray applet. i3bar already shows the tray via `tray_output primary`
-# below; change that to $mon_vert to move the icon to the portrait monitor.
+# below; change that to $mon_small to move the icon to the MSI.
 
 # set wallpaper
 exec --no-startup-id sleep 2 && nitrogen --restore
