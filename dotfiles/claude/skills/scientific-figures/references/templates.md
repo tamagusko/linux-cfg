@@ -69,6 +69,8 @@ After the table, list the `⚠️ MISSING` items and stop for approval.
 ### Fig. [n]: [short title]
 Role: [one sentence]
 Source: [data file and column(s), or "conceptual"]; verified against [script:function]
+Rule 0: [grey | colour, exception n: one clause]
+Series / fills: [n], within limit | over limit, handled by [direct labels | panels | value steps]
 Variations: [filenames of the five candidates, or "n/a" for data plots]
 Scores (Accuracy / Clarity / Simplicity / Consistency / Elegance), or "n/a" for data plots:
   v1: 4/3/2/5/3 = 17
@@ -78,7 +80,7 @@ Chosen: v2, because [one sentence]
 Rejected: v1 [one clause]; v3 [one clause]; ...
 File: [path], [width mm], [vector | 600 dpi]
 Script: [path or "n/a"]
-Greyscale check: [pass | fail: what merges]
+Gate: [pass | fail: what merges]; smallest L* gap [n] (palette_check.py); preview at [width] mm
 ```
 
 ## 4. Caption shape
@@ -113,14 +115,16 @@ Tick each item for the whole set, not per figure.
 - [ ] Reading order matches argument order (problem, method, analysis, results, conclusion)
 - [ ] Each data figure was checked against the plotting script: the variant drawn is the variant the caption names
 - [ ] Every claim written inside a schematic agrees with the results tables and text
-- [ ] One palette, one typeface (matching the venue body font), one marker set across all figures; no in-figure titles
+- [ ] Rule 0 recorded for every figure; every colour figure names its exception
+- [ ] No axes holds more than four line styles or four hatches; five or more series are direct-labelled, split or moved; five or more fills use value steps with names at the bars
+- [ ] One palette logic, one typeface (matching the venue body font), one marker set across all figures; no in-figure titles; `scripts/set_check.py figures/*.pdf --widths 90,190` clean
 - [ ] Every symbol and name in figures, tables and listings appears in the notation map with the same form as in the equations and text
 - [ ] All text at or above 7 pt at final width (`scripts/text_size_check.py --width-mm`); all lines at or above 0.5 pt; nothing clipped at the file edge
 - [ ] Axis labels carry quantity and unit
 - [ ] Uncertainty shown and defined wherever the data carry it
 - [ ] Every plotted value traceable to a data file; no open `⚠️ MISSING` markers
 - [ ] No pie charts, dual axes, 3D, gradients or shadows
-- [ ] Greyscale conversion of every colour figure remains readable (`scripts/greyscale_preview.py --out`)
+- [ ] Gate passed for every figure: `scripts/palette_check.py` smallest gap at or above 20 L*, `scripts/greyscale_preview.py --width-mm` at print width inspected, result in the design log
 - [ ] Figure count within venue limit
 - [ ] Captions follow the three-part shape; none exceed three sentences; no em-dashes
 - [ ] Tables: `scripts/table_check.py` clean, one type size across all tables, no `\resizebox`
