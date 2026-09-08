@@ -1,0 +1,98 @@
+# paper.mplstyle: greyscale-first matplotlib defaults for journal figures.
+# Usage: plt.style.use('path/to/paper.mplstyle')
+#        or figstyle.use("grey" | "colour", width="single" | "double")
+#
+# Rule 0 default is greyscale. The colour cycle below is black and one mid grey,
+# crossed with two line styles and four markers, so every series carries two
+# cues that survive photocopying and reduction. Colour is opt-in through
+# figstyle.use("colour") after a Rule 0 exception is recorded in the design log.
+#
+# Serif because Elsevier (elsarticle) and IEEE Transactions set body text in a
+# Times-like face; figure text matches the body font. On a stock Linux box Times
+# New Roman is absent and matplotlib falls back to Liberation Serif (metric-
+# compatible with Times) or STIXGeneral; both embed as Type 42. For a sans venue
+# switch the two lines marked SANS.
+#
+# Widths: 3.54 in = 90 mm single column, 5.51 in = 140 mm, 7.48 in = 190 mm
+# double column. Design at final width and include at natural size or
+# width=\columnwidth / \textwidth; never scale a wide figure down.
+
+# Geometry and export. Constrained layout keeps every label inside the figure and
+# savefig.bbox standard keeps the file at exactly the design width, so
+# \includegraphics prints it 1:1 and all figures of the set share one text size.
+figure.figsize      : 3.54, 2.36
+figure.dpi          : 150
+figure.constrained_layout.use : True
+figure.constrained_layout.w_pad : 0.02
+figure.constrained_layout.h_pad : 0.02
+savefig.dpi         : 600
+savefig.bbox        : standard
+savefig.format      : pdf
+pdf.fonttype        : 42
+ps.fonttype         : 42
+svg.fonttype        : none
+
+# Typography: 8 pt labels, 7 pt ticks; floor 7 pt at print size (Rule 5)
+font.family         : serif
+font.serif          : Times New Roman, Times, Nimbus Roman, TeX Gyre Termes, Liberation Serif, STIXGeneral, DejaVu Serif
+mathtext.fontset    : stix
+# SANS: replace the two lines above with
+# font.family       : sans-serif
+# font.sans-serif   : Helvetica, Arial, Liberation Sans, DejaVu Sans
+# mathtext.fontset  : dejavusans
+font.size           : 8
+axes.titlesize      : 8
+axes.labelsize      : 8
+xtick.labelsize     : 7
+ytick.labelsize     : 7
+legend.fontsize     : 7
+legend.title_fontsize : 7
+
+# Axes and spines: no in-figure titles, data are the darkest thing on the page
+axes.linewidth      : 0.6
+axes.spines.top     : False
+axes.spines.right   : False
+axes.grid           : False
+axes.axisbelow      : True
+axes.labelpad       : 3
+axes.xmargin        : 0.03
+axes.ymargin        : 0.05
+axes.formatter.use_mathtext : True
+axes.formatter.limits : -3, 4
+grid.linewidth      : 0.25
+grid.color          : 0.85
+
+# Ticks
+xtick.direction     : out
+ytick.direction     : out
+xtick.major.width   : 0.6
+ytick.major.width   : 0.6
+xtick.major.size    : 3
+ytick.major.size    : 3
+xtick.minor.visible : False
+ytick.minor.visible : False
+
+# Marks (Rule 1 and Rule 5): data lines 1.0 pt, auxiliary lines 0.5 pt, grid 0.25 pt
+lines.linewidth     : 1.0
+lines.markersize    : 3.5
+lines.markeredgewidth : 0.6
+errorbar.capsize    : 2
+patch.linewidth     : 0.6
+patch.edgecolor     : black
+patch.force_edgecolor : True
+hatch.linewidth     : 0.5
+hatch.color         : black
+
+# Legend: direct labels first; a legend, if unavoidable, is quiet and named per style
+legend.frameon      : False
+legend.handlelength : 2.4
+legend.borderaxespad: 0.3
+legend.columnspacing: 1.0
+
+# Rule 0 default cycle. Four entries = the Rule 1 limit. A fifth series silently
+# recycles the first; figstyle.too_many_series(ax) catches it.
+axes.prop_cycle     : cycler('color', ['000000', '000000', '555555', '555555']) + cycler('linestyle', ['-', '--', '-', ':']) + cycler('marker', ['o', 's', '^', 'D'])
+
+# Colour maps: Greys by default. figstyle.use("colour") switches to cividis;
+# use 'RdBu_r' or 'PuOr' for diverging data and annotate the cells (Rule 3).
+image.cmap          : Greys

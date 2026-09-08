@@ -1,0 +1,4 @@
+{
+  "_doc": "Explicit tracker-row -> papers/ directory overrides. Key on the row's Title (preferred) or Project, lower-cased; value is the directory NAME under in-progress/, projects/, review/ or published/. Fuzzy matching handles the obvious cases; add an entry whenever a row reports as unmatched or resolves to the wrong directory. A wrong match is worse than none, so the matcher declines ambiguous cases by design.",
+  "_example": "bike library [full title to be defined]: bike-library"
+}
