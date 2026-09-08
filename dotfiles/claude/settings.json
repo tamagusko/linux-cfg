@@ -167,5 +167,6 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754089766006
   },
-  "inputNeededNotifEnabled": true
+  "inputNeededNotifEnabled": true,
+  "crossSessionInbound": "refuse"
 }
