@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -u
+
+notification_id=99117
+lock_file="${XDG_RUNTIME_DIR:-/tmp}/linux-cfg-clipboard-notify.lock"
+
+exec 9>"$lock_file"
+flock -n 9 || exit 0
+
+while clipnotify; do
+    active_class=$(xdotool getactivewindow getwindowclassname 2>/dev/null || true)
+    [[ ${active_class,,} == "kitty" ]] || continue
+
+    characters=$(xclip -selection clipboard -out 2>/dev/null | wc -m)
+    ((characters > 0)) || continue
+    dunstify \
+        -a "Clipboard" \
+        -u low \
+        -r "$notification_id" \
+        -t 1200 \
+        "Text copied" \
+        "$characters characters"
+done
