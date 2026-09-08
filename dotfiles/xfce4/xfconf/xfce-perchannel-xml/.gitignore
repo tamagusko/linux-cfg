@@ -1,0 +1,2 @@
+# Window geometry and other volatile Thunar state managed by xfconf.
+/thunar.xml
