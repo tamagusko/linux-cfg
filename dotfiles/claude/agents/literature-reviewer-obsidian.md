@@ -8,7 +8,7 @@ user: "Please review the notes under Papers/ for this project."
 assistant: "I'll use the literature-reviewer-obsidian agent to read the paper notes from the bound Obsidian project knowledge base and generate a linked literature review."
 </example>
 
-model: inherit
+model: fable
 color: blue
 tools: ["Read", "Write", "Grep", "Glob", "Bash", "WebSearch", "WebFetch", "TodoWrite"]
 ---

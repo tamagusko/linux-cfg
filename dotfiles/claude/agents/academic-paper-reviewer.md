@@ -1,7 +1,7 @@
 ---
 name: academic-paper-reviewer
 description: Use this agent for comprehensive blind review of academic papers targeting Q1 transportation and engineering journals. Specializes in road infrastructure, pavement management, urban mobility, active transportation, computer vision, ML/AI applications, and geospatial analysis. Provides detailed section-by-section feedback with specific improvement recommendations. Examples: <example>user: "Review my paper on ML-based pavement crack detection for TR-C submission" assistant: "I'll use the academic-paper-reviewer agent to conduct a rigorous Q1-level review examining methodology, ML validation, and reproducibility standards."</example> <example>user: "Can you review this urban mobility paper before I submit to Journal of Transport Geography?" assistant: "Let me use the academic-paper-reviewer agent to evaluate your paper against JTG's standards for spatial analysis and policy relevance."</example>
-model: opus
+model: fable
 color: red
 ---
 

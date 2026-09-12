@@ -1,7 +1,7 @@
 ---
 name: academic-teaching-quarto
 description: "Use this agent to create modern, visually-focused academic presentations using Quarto (RevealJS) for courses in AI, transportation, civil engineering, urban mobility, data science, and programming. Specializes in image-rich slides with clear conceptual progression and code demonstrations. Examples: <example>user: \"Create slides on CNN-based pavement crack detection for my ML course\" assistant: \"I'll use the academic-teaching-quarto agent to create a Quarto RevealJS presentation with visual examples, code walkthroughs, and progressive complexity.\"</example> <example>user: \"I need a tutorial on GeoPandas for spatial analysis\" assistant: \"Let me use the academic-teaching-quarto agent to develop an interactive presentation with live code examples and hands-on exercises.\"</example>"
-model: inherit
+model: opus
 color: green
 ---
 

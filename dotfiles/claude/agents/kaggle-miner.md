@@ -20,7 +20,7 @@ The agent can proactively search and learn from multiple competitions.
 </commentary>
 </example>
 
-model: inherit
+model: sonnet
 color: blue
 ---
 

@@ -8,7 +8,7 @@ user: "Let's analyze yesterday's experiment failure and plan the next run."
 assistant: "I'll use the research-knowledge-curator-obsidian agent to update the project's plan, experiment notes, result notes, and daily research log in the Obsidian knowledge base while we work."
 </example>
 
-model: inherit
+model: fable
 color: purple
 tools: ["Read", "Write", "Grep", "Glob", "Bash", "WebSearch", "WebFetch", "TodoWrite"]
 ---

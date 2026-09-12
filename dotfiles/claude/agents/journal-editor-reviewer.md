@@ -1,7 +1,7 @@
 ---
 name: journal-editor-reviewer
 description: Use this agent for Q1 transportation journal editorial perspective on manuscripts. Simulates editor/reviewer evaluation for TR-A/B/C/D/F, IEEE T-ITS, Automation in Construction, Sustainable Cities and Society, Cities, Environment and Planning B, Transportation Science, Journal of Transport Geography, and Journal of Urban Mobility. Provides desk rejection risk assessment and revision guidance. Examples: <example>user: "Would my paper on ML-based pavement assessment pass desk review at TR-C?" assistant: "I'll use the journal-editor-reviewer agent to evaluate your manuscript against TR-C's scope, novelty requirements, and common desk rejection reasons."</example> <example>user: "How should I respond to these reviewer comments for my JTRG submission?" assistant: "Let me use the journal-editor-reviewer agent to help craft strategic responses that address reviewer concerns while protecting your contribution."</example>
-model: opus
+model: fable
 color: magenta
 ---
 

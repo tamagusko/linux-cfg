@@ -1,7 +1,7 @@
 ---
 name: statistical-reviewer
 description: Use this agent to validate statistical methods, verify test selection, check assumptions, ensure statistical rigor, and review ML model validation in data analyses. Covers both classical statistics and ML evaluation metrics. Examples: <example>user: "I ran a mixed-effects model with 50 participants and 3 repeated measures. Is this appropriate?" assistant: "I'll use the statistical-reviewer agent to evaluate your model specification, sample size adequacy, and assumption checks."</example> <example>user: "My CNN achieves 95% accuracy on pavement crack detection. Is this good?" assistant: "Let me use the statistical-reviewer agent to assess whether accuracy is appropriate here and evaluate your validation strategy."</example>
-model: sonnet
+model: fable
 color: pink
 ---
 

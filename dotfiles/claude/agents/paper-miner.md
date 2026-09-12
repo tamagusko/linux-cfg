@@ -38,7 +38,7 @@ The agent stores rebuttal patterns in the same canonical memory instead of scatt
 </commentary>
 </example>
 
-model: inherit
+model: sonnet
 color: green
 tools: ["Read", "Write", "Bash", "Grep", "Glob"]
 ---

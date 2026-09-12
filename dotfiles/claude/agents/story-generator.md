@@ -10,7 +10,7 @@ Examples:
 </example>
 
 tools: Bash, Glob, Grep, LS, Read, WebFetch, TodoWrite, WebSearch
-model: inherit
+model: sonnet
 color: blue
 ---
 
