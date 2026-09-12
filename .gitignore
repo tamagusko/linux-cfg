@@ -62,6 +62,13 @@ dotfiles/claude/skills/systematic-debugging
 __pycache__/
 *.pyc
 
+# The docx skill unzips and rewrites documents next to its own scripts, so a
+# session that edits a .docx leaves the working copies and an unpacked tree
+# (word/, docProps/, _rels/) inside dotfiles/. Scratch, regenerated on demand —
+# and in a public repo the document contents are the exposure.
+dotfiles/claude/skills/docx/scripts/*.docx
+dotfiles/claude/skills/docx/scripts/u_*/
+
 # micro writes its own state next to its config: buffers/ (cursor/history),
 # backups/ and plug/ (downloaded plugins). ~/.config/micro is linked into
 # this repo, so those land in the tree; they are state, not config.
