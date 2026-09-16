@@ -7,6 +7,9 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "skillOverrides": {
+    "daily-paper-generator": "off"
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -152,9 +155,6 @@
         "url": "https://github.com/affaan-m/everything-claude-code.git"
       }
     }
-  },
-  "skillOverrides": {
-    "daily-paper-generator": "off"
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",

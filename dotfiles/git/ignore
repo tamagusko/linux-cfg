@@ -12,3 +12,5 @@
 # them back; the papers repo accumulated 47 of them across 25 subfolders.
 # .claude/skills/ and .claude/project-memory/ are deliberate config — not ignored.
 **/.claude/logs/
+
+**/.claude/settings.local.json
