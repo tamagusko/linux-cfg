@@ -1,0 +1,4 @@
+interface:
+  display_name: "Faculty Job Campaign"
+  short_description: "Assess faculty fit and improve campaign materials"
+  default_prompt: "Use $faculty-job-campaign to assess my fit for this faculty role and prioritise the next actions using my CV and the advertisement."
