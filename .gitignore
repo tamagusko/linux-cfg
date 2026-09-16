@@ -75,3 +75,8 @@ dotfiles/claude/skills/docx/scripts/u_*/
 dotfiles/micro/buffers/
 dotfiles/micro/backups/
 dotfiles/micro/plug/
+
+# claude.ai syncs account-level skills into ~/.claude/skills/synced/<bucket-id>/,
+# which is linked into this repo. It is app-managed state (re-downloaded on
+# sync, keyed by an account bucket id), not config authored here.
+dotfiles/claude/skills/synced/
