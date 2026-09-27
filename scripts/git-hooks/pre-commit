@@ -4,7 +4,7 @@
 #
 # .gitignore stops untracked secret FILES from being swept up by `git add -A`.
 # It cannot stop a secret pasted into a file that is already tracked — a token
-# dropped into dotfiles/claude/settings.json, a key in an i3 script. That is
+# dropped into a tracked config file, a key in an i3 script. That is
 # what this hook is for: it reads staged CONTENT, not filenames.
 #
 # Installed by pointing git at this directory rather than by copying:
@@ -23,8 +23,8 @@ note() { printf '\n\033[31mpre-commit: %s\033[0m\n' "$*" >&2; }
 #
 # High-signal patterns only: each has a fixed vendor prefix and a length floor,
 # so documentation placeholders (YOUR_API_KEY, <your-api-key>, ${GEMINI_API_KEY})
-# do not match. A generic /password\s*=/ rule would fire on every vendored skill
-# doc in dotfiles/claude/skills and train everyone to pass --no-verify.
+# do not match. A generic /password\s*=/ rule would fire on every example config
+# and train everyone to pass --no-verify.
 PATTERNS='sk-ant-[A-Za-z0-9_-]{20,}
 ghp_[A-Za-z0-9]{30,}
 gho_[A-Za-z0-9]{30,}

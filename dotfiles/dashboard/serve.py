@@ -24,7 +24,7 @@ from pathlib import Path
 HOME = Path.home()
 REPOS = HOME / "repos"
 COURSE = REPOS / "classes/ime/ai_applied_transport_2026"
-PIPELINE = (REPOS / "linux-cfg/dotfiles/claude/skills/manuscript-pipeline"
+PIPELINE = (REPOS / "ai-config/claude/skills/manuscript-pipeline"
             / "scripts/pipeline_status.py")
 PORT = 8787
 REFRESH_SECONDS = 600

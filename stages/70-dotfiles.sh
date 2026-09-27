@@ -87,10 +87,10 @@ mapfile -t config_dirs < <(
         pkg="$(basename "$d")"
         # Not every dotfiles/ directory belongs under ~/.config:
         #   zsh    -> .zshrc, installed above
-        #   claude -> ~/.claude, installed by stage 75
-        # Linking either here would put the files somewhere nothing reads them.
+        # Linking it here would put the files somewhere nothing reads them.
+        # (~/.claude comes from the private ai-config repo, via stage 75.)
         case "$pkg" in
-            zsh|claude) continue ;;
+            zsh) continue ;;
         esac
         # An empty directory is a leftover, not a package. `git rm` deletes the
         # files it tracks and leaves the directories behind, so a package this

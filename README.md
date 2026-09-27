@@ -35,7 +35,6 @@ Then reboot — the NVIDIA driver and the cedilla input modules both need it.
 | `./scripts/monitors.sh` | Print the `set $mon_*` lines for the current display layout |
 | `./scripts/check-i3-config.sh` | Static-check `dotfiles/i3/config` before reloading i3 |
 | `./scripts/check-repo-hygiene.sh` | Audit this repo for credentials and stray state |
-| `./scripts/export-claude-config.sh` | Re-export `~/.claude` into `dotfiles/claude/` |
 | `./scripts/setup-jupyter-desktop.sh` | Make double-clicking a `.ipynb` open it in the right uv environment |
 | `./scripts/setup-jupyter-desktop.sh --project .` | Point another repo at that flow |
 | `./scripts/setup-micro-desktop.sh` | Open `.txt`, `.py`, `.json`, `.yaml` and `.conf` in micro inside kitty on double-click |
@@ -58,7 +57,7 @@ in without renumbering the rest.
 | `55-bluetooth` | Enables `bluetooth.service`, clears rfkill blocks; asks before trusting paired audio devices for auto-connect |
 | `60-latex` | TeX Live, `pandoc-cli`, `pandoc-crossref`, Quarto |
 | `70-dotfiles` | oh-my-zsh, powerlevel10k, `.zshrc`, symlinks into `~/.config` |
-| `75-claude` | Claude Code CLI, nodejs for its hooks, `~/.claude` from `dotfiles/claude` |
+| `75-ai-config` | Clones the private `ai-config` repo and runs its installer (Claude Code, Codex, skills, plugins, MCP); skips if the repo is not accessible |
 | `80-security` | Firewall, ssh client hardening, fstrim, mirrors |
 | `90-maintenance` | btrfs snapshots, zram, wifi power-save off (rtw89 latency), pacman cache cleanup |
 
