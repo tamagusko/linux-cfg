@@ -24,7 +24,7 @@ from pathlib import Path
 HOME = Path.home()
 REPOS = HOME / "repos"
 COURSE = REPOS / "classes/ime/ai_applied_transport_2026"
-PIPELINE = (REPOS / "ai-config/claude/skills/manuscript-pipeline"
+PIPELINE = (REPOS / "ai-config/claude/skills/tamagusko-manuscript-pipeline"
             / "scripts/pipeline_status.py")
 PORT = 8787
 REFRESH_SECONDS = 600
@@ -199,7 +199,7 @@ def render() -> str:
             "The tracker workbook has not been updated since its banner date, "
             "while the repos have moved on. Statuses shown for submissions and "
             "review rounds may be months out of date. Run the "
-            "manuscript-pipeline skill for a row-by-row reconciliation.",
+            "tamagusko-manuscript-pipeline skill for a row-by-row reconciliation.",
             REPOS / "applications/Professor"))
     if unmatched:
         items.append((
