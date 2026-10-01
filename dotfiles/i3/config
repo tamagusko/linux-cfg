@@ -471,6 +471,10 @@ exec --no-startup-id ~/.config/i3/scripts/clipboard-notify
 
 # Autostart apps as you like
 exec --no-startup-id sleep 2 && kitty && workspace $ws1
+# The assign rules below place each one: kitty on $ws1, Edge on $ws2, Thunar on $ws4
+exec --no-startup-id sleep 2 && kitty
+exec --no-startup-id sleep 2 && microsoft-edge-stable
+exec --no-startup-id sleep 2 && thunar
 #exec --no-startup-id sleep 7 && firefox https://github.com/endeavouros-team/endeavouros-i3wm-setup/blob/main/force-knowledge.md
 #exec --no-startup-id sleep 5 && thunar
 
